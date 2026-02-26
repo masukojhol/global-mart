@@ -27,6 +27,277 @@ const CATEGORIES = [
   { id: 10, icon: '🍪', label: 'Snacks', badge: 'NEW' },
 ];
 
+// Banner data with online images - M&S Style Clean Design
+const BANNERS = [
+  {
+    id: 1,
+    image: 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=800&h=600&fit=crop',
+    title: 'Your Home,',
+    highlight: 'Delivered in Korea',
+    subtitle: 'International Foods & More',
+    description: 'Authentic products from Nepal, India, Pakistan & more. Free delivery on orders over ₩30,000.',
+    cta: 'Shop Now',
+    bgColor: '#f8f5f2',
+  },
+  {
+    id: 2,
+    image: 'https://images.unsplash.com/photo-1543168256-418811576931?w=800&h=600&fit=crop',
+    title: 'Fresh',
+    highlight: 'Grocery Deals',
+    subtitle: 'Weekly Offers',
+    description: 'Up to 40% off on fresh vegetables, fruits and daily essentials.',
+    cta: 'View Deals',
+    bgColor: '#f5f8f5',
+  },
+  {
+    id: 3,
+    image: 'https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=800&h=600&fit=crop',
+    title: 'Authentic',
+    highlight: 'Asian Spices',
+    subtitle: 'Direct Import',
+    description: 'Premium quality spices and ingredients from South Asia.',
+    cta: 'Explore',
+    bgColor: '#fdf8f3',
+  },
+  {
+    id: 4,
+    image: 'https://images.unsplash.com/photo-1498837167922-ddd27525d352?w=800&h=600&fit=crop',
+    title: 'Free Delivery',
+    highlight: 'Orders ₩30,000+',
+    subtitle: 'Limited Time Offer',
+    description: 'Fast shipping across Korea. Same day delivery available in Seoul.',
+    cta: 'Order Now',
+    bgColor: '#f5f5f8',
+  },
+];
+
+function HeroBannerCarousel({ isMobile, isDesktop }) {
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const [isTransitioning, setIsTransitioning] = useState(false);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setIsTransitioning(true);
+      setTimeout(() => {
+        setCurrentSlide((prev) => (prev + 1) % BANNERS.length);
+        setIsTransitioning(false);
+      }, 300);
+    }, 5000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const goToSlide = (index) => {
+    if (index !== currentSlide) {
+      setIsTransitioning(true);
+      setTimeout(() => {
+        setCurrentSlide(index);
+        setIsTransitioning(false);
+      }, 300);
+    }
+  };
+
+  const nextSlide = () => goToSlide((currentSlide + 1) % BANNERS.length);
+  const prevSlide = () => goToSlide((currentSlide - 1 + BANNERS.length) % BANNERS.length);
+
+  const banner = BANNERS[currentSlide];
+
+  return (
+    <div style={{
+      position: 'relative',
+      overflow: 'hidden',
+      background: banner.bgColor,
+      transition: 'background 0.5s ease',
+      margin: isMobile ? '8px' : isDesktop ? '16px' : '12px',
+      borderRadius: 16,
+    }}>
+      {/* Main Container - Split Layout */}
+      <div style={{
+        display: 'flex',
+        flexDirection: isMobile ? 'column-reverse' : 'row',
+        minHeight: isMobile ? 'auto' : isDesktop ? 380 : 320,
+      }}>
+        {/* Text Content Side */}
+        <div style={{
+          flex: isMobile ? 'none' : '1',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          padding: isMobile ? '32px 24px 40px' : isDesktop ? '48px 60px' : '36px 32px',
+          opacity: isTransitioning ? 0 : 1,
+          transform: isTransitioning ? 'translateY(10px)' : 'translateY(0)',
+          transition: 'all 0.3s ease',
+        }}>
+          <div style={{
+            maxWidth: isDesktop ? 420 : 360,
+            textAlign: isMobile ? 'center' : 'left',
+          }}>
+            <p style={{
+              fontSize: 11,
+              fontWeight: 500,
+              letterSpacing: 2,
+              textTransform: 'uppercase',
+              marginBottom: 12,
+              color: '#666',
+            }}>
+              {banner.subtitle}
+            </p>
+            <h1 style={{
+              fontSize: isDesktop ? 44 : isMobile ? 30 : 36,
+              fontWeight: 300,
+              lineHeight: 1.1,
+              margin: 0,
+              fontFamily: theme.fonts.primary,
+              letterSpacing: -0.5,
+              color: '#000',
+            }}>
+              {banner.title}<br />
+              <span style={{ fontWeight: 700 }}>{banner.highlight}</span>
+            </h1>
+            <p style={{
+              fontSize: 14,
+              color: '#555',
+              marginTop: 16,
+              marginBottom: 24,
+              lineHeight: 1.6,
+              fontWeight: 400,
+            }}>
+              {banner.description}
+            </p>
+            <button style={{
+              background: '#000',
+              color: '#fff',
+              border: 'none',
+              padding: '14px 32px',
+              fontSize: 12,
+              fontWeight: 500,
+              cursor: 'pointer',
+              textTransform: 'uppercase',
+              letterSpacing: 1,
+              fontFamily: theme.fonts.body,
+              transition: 'all 0.3s ease',
+              borderRadius: 25,
+            }}>
+              {banner.cta}
+            </button>
+          </div>
+        </div>
+
+        {/* Image Side */}
+        <div style={{
+          flex: isMobile ? 'none' : '1.2',
+          position: 'relative',
+          minHeight: isMobile ? 200 : 'auto',
+          overflow: 'hidden',
+          margin: isMobile ? '12px 12px 0 12px' : isDesktop ? '16px 16px 16px 0' : '12px 12px 12px 0',
+          borderRadius: 12,
+        }}>
+          <img
+            src={banner.image}
+            alt={banner.highlight}
+            style={{
+              width: '100%',
+              height: '100%',
+              objectFit: 'cover',
+              objectPosition: 'center',
+              position: isMobile ? 'relative' : 'absolute',
+              inset: isMobile ? 'auto' : 0,
+              opacity: isTransitioning ? 0 : 1,
+              transform: isTransitioning ? 'scale(1.02)' : 'scale(1)',
+              transition: 'all 0.5s ease',
+              borderRadius: 12,
+            }}
+          />
+        </div>
+      </div>
+
+      {/* Navigation Arrows - Desktop Only */}
+      {isDesktop && (
+        <>
+          <button
+            onClick={prevSlide}
+            style={{
+              position: 'absolute',
+              left: 16,
+              top: '50%',
+              transform: 'translateY(-50%)',
+              background: '#fff',
+              border: '1px solid #ddd',
+              width: 40,
+              height: 40,
+              borderRadius: '50%',
+              cursor: 'pointer',
+              color: '#000',
+              fontSize: 18,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              transition: 'all 0.3s ease',
+              boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+            }}
+            onMouseEnter={(e) => e.currentTarget.style.background = '#f5f5f5'}
+            onMouseLeave={(e) => e.currentTarget.style.background = '#fff'}
+          >
+            ‹
+          </button>
+          <button
+            onClick={nextSlide}
+            style={{
+              position: 'absolute',
+              right: 16,
+              top: '50%',
+              transform: 'translateY(-50%)',
+              background: '#fff',
+              border: '1px solid #ddd',
+              width: 40,
+              height: 40,
+              borderRadius: '50%',
+              cursor: 'pointer',
+              color: '#000',
+              fontSize: 18,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              transition: 'all 0.3s ease',
+              boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+            }}
+            onMouseEnter={(e) => e.currentTarget.style.background = '#f5f5f5'}
+            onMouseLeave={(e) => e.currentTarget.style.background = '#fff'}
+          >
+            ›
+          </button>
+        </>
+      )}
+
+      {/* Dot Indicators */}
+      <div style={{
+        position: 'absolute',
+        bottom: isMobile ? 12 : 20,
+        left: '50%',
+        transform: 'translateX(-50%)',
+        display: 'flex',
+        gap: 8,
+        zIndex: 10,
+      }}>
+        {BANNERS.map((_, index) => (
+          <button
+            key={index}
+            onClick={() => goToSlide(index)}
+            style={{
+              width: currentSlide === index ? 24 : 8,
+              height: 8,
+              borderRadius: 4,
+              background: currentSlide === index ? '#000' : '#ccc',
+              border: 'none',
+              cursor: 'pointer',
+              transition: 'all 0.3s ease',
+            }}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
+
 function CountdownTimer() {
   const [time, setTime] = useState({ h: 5, m: 32, s: 15 });
 
@@ -323,69 +594,8 @@ export function HomePage() {
 
       {/* Main Content */}
       <main style={{ padding: '0 0 20px', maxWidth: 1200, margin: '0 auto' }}>
-        {/* Hero Banner - M&S Style */}
-        <div style={{
-          background: '#000',
-          color: '#fff',
-          padding: isMobile ? '40px 20px' : '60px 40px',
-          position: 'relative',
-          overflow: 'hidden',
-        }}>
-          <div style={{
-            position: 'relative',
-            zIndex: 1,
-            maxWidth: isDesktop ? 600 : 500,
-            textAlign: isDesktop ? 'left' : 'center',
-            margin: isDesktop ? 0 : '0 auto',
-          }}>
-            <p style={{
-              fontSize: 12,
-              fontWeight: 400,
-              letterSpacing: 2,
-              textTransform: 'uppercase',
-              marginBottom: 16,
-              opacity: 0.8,
-            }}>
-              International Foods & More
-            </p>
-            <h1 style={{
-              fontSize: isDesktop ? 48 : isMobile ? 32 : 40,
-              fontWeight: 300,
-              lineHeight: 1.1,
-              margin: 0,
-              fontFamily: theme.fonts.primary,
-              letterSpacing: -1,
-            }}>
-              Your Home,<br />
-              <span style={{ fontWeight: 600 }}>Delivered in Korea</span>
-            </h1>
-            <p style={{
-              fontSize: isDesktop ? 16 : 14,
-              opacity: 0.7,
-              marginTop: 20,
-              marginBottom: 28,
-              lineHeight: 1.6,
-              fontWeight: 300,
-            }}>
-              Authentic products from Nepal, India, Pakistan & more.<br />
-              Free delivery on orders over ₩30,000
-            </p>
-            <button style={{
-              background: '#fff',
-              color: '#000',
-              border: 'none',
-              padding: '14px 32px',
-              fontSize: 13,
-              fontWeight: 500,
-              cursor: 'pointer',
-              textTransform: 'uppercase',
-              letterSpacing: 1,
-              fontFamily: theme.fonts.body,
-            }}>
-              Shop Now
-            </button>
-          </div>
-        </div>
+        {/* Hero Banner Carousel - M&S Style */}
+        <HeroBannerCarousel isMobile={isMobile} isDesktop={isDesktop} />
 
         {/* Category Grid - M&S Style */}
         <div style={{
