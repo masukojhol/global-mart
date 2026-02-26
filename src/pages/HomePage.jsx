@@ -147,296 +147,262 @@ export function HomePage() {
         rel="stylesheet"
       />
 
-      {/* Top Header */}
+      {/* Top Header - M&S Style Black & White */}
       <header style={{
         background: '#fff',
-        padding: '12px 16px',
         position: 'sticky',
         top: 0,
         zIndex: 100,
-        boxShadow: '0 1px 3px rgba(0,0,0,0.08)',
+        borderBottom: '1px solid #e5e5e5',
       }}>
+        {/* Top bar with account links */}
+        {isDesktop && (
+          <div style={{
+            background: '#f5f5f5',
+            padding: '8px 0',
+            borderBottom: '1px solid #e5e5e5',
+          }}>
+            <div style={{
+              maxWidth: 1200,
+              margin: '0 auto',
+              padding: '0 20px',
+              display: 'flex',
+              justifyContent: 'flex-end',
+              gap: 24,
+            }}>
+              {['Store Finder', 'Help', 'Track Order'].map((link) => (
+                <button
+                  key={link}
+                  onClick={link === 'Track Order' ? () => setShowTrackingModal(true) : undefined}
+                  style={{
+                    background: 'none',
+                    border: 'none',
+                    fontSize: 12,
+                    color: '#333',
+                    cursor: 'pointer',
+                    fontFamily: theme.fonts.body,
+                  }}
+                >
+                  {link}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Main header */}
         <div style={{
           maxWidth: 1200,
           margin: '0 auto',
+          padding: isDesktop ? '16px 20px' : '12px 16px',
         }}>
-        <div style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          marginBottom: 12,
-        }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: isDesktop ? 32 : 8 }}>
-            <span style={{
-              fontSize: isDesktop ? 28 : 24,
-              fontWeight: 700,
-              fontFamily: theme.fonts.primary,
-              background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-            }}>
-              GlobalMart
-            </span>
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+          }}>
+            {/* Logo + Nav container */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: 48 }}>
+              {/* Logo */}
+              <span style={{
+                fontSize: isDesktop ? 28 : 22,
+                fontWeight: 300,
+                fontFamily: theme.fonts.primary,
+                color: '#000',
+                letterSpacing: -1,
+              }}>
+                <span style={{ fontWeight: 700 }}>Global</span>Mart
+              </span>
 
-            {/* Desktop Navigation Links */}
-            {isDesktop && (
-              <div style={{ display: 'flex', gap: 24 }}>
-                {['Home', 'Categories', 'Flash Deals', 'Trending', 'Contact'].map((link) => (
-                  <button
-                    key={link}
-                    style={{
-                      background: 'none',
-                      border: 'none',
-                      fontSize: 14,
-                      fontWeight: 500,
-                      color: link === 'Home' ? '#667eea' : '#333',
-                      cursor: 'pointer',
-                      padding: '8px 0',
-                      position: 'relative',
-                    }}
-                  >
-                    {link}
-                    {link === 'Home' && (
-                      <div style={{
-                        position: 'absolute',
-                        bottom: 0,
-                        left: 0,
-                        right: 0,
-                        height: 2,
-                        background: '#667eea',
-                        borderRadius: 1,
-                      }} />
-                    )}
-                  </button>
-                ))}
-              </div>
-            )}
-          </div>
+              {/* Desktop Navigation Links */}
+              {isDesktop && (
+                <nav style={{ display: 'flex', gap: 28 }}>
+                  {['Home', 'Categories', 'Flash Deals', 'Trending', 'Contact'].map((link) => (
+                    <button
+                      key={link}
+                      style={{
+                        background: 'none',
+                        border: 'none',
+                        fontSize: 14,
+                        fontWeight: 400,
+                        color: '#000',
+                        cursor: 'pointer',
+                        padding: '4px 0',
+                        fontFamily: theme.fonts.body,
+                      }}
+                    >
+                      {link}
+                    </button>
+                  ))}
+                </nav>
+              )}
+            </div>
 
-          {/* Desktop Right Actions */}
-          {isDesktop && (
-            <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+            {/* Right Actions */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: isDesktop ? 20 : 12 }}>
+              {/* Account */}
               <button
                 onClick={() => setShowAuthModal(true)}
                 style={{
                   background: 'none',
                   border: 'none',
-                  fontSize: 14,
-                  fontWeight: 500,
-                  color: '#333',
                   cursor: 'pointer',
+                  padding: 4,
                   display: 'flex',
                   alignItems: 'center',
                   gap: 6,
                 }}
               >
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#333" strokeWidth="2">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#000" strokeWidth="1.5">
                   <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
                   <circle cx="12" cy="7" r="4"/>
                 </svg>
-                Sign In
+                {isDesktop && <span style={{ fontSize: 13, color: '#000' }}>Sign In</span>}
               </button>
+
+              {/* Cart */}
               <button
                 onClick={openCart}
                 style={{
-                  background: '#667eea',
+                  background: '#000',
                   border: 'none',
-                  padding: '10px 20px',
-                  borderRadius: 8,
-                  fontSize: 14,
-                  fontWeight: 500,
-                  color: '#fff',
                   cursor: 'pointer',
+                  padding: '8px 16px',
                   display: 'flex',
                   alignItems: 'center',
                   gap: 8,
                 }}
               >
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2">
-                  <circle cx="9" cy="21" r="1"/>
-                  <circle cx="20" cy="21" r="1"/>
-                  <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="1.5">
+                  <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+                  <line x1="3" y1="6" x2="21" y2="6"/>
+                  <path d="M16 10a4 4 0 0 1-8 0"/>
                 </svg>
-                Cart ({cartCount})
+                <span style={{ fontSize: 13, color: '#fff' }}>Cart ({cartCount})</span>
               </button>
             </div>
-          )}
-
-          {!isDesktop && (
-            <button
-              onClick={() => setShowTrackingModal(true)}
-              style={{
-                background: 'none',
-                border: 'none',
-                position: 'relative',
-                cursor: 'pointer',
-                padding: 4,
-              }}
-            >
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#333" strokeWidth="2">
-                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
-                <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
-              </svg>
-              <span style={{
-                position: 'absolute',
-                top: 0,
-                right: 0,
-                background: '#ff4757',
-                color: '#fff',
-                fontSize: 10,
-                fontWeight: 600,
-                width: 16,
-                height: 16,
-                borderRadius: '50%',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}>
-                3
-              </span>
-            </button>
-          )}
+          </div>
         </div>
 
         {/* Search Bar */}
         <div style={{
-          display: 'flex',
-          alignItems: 'center',
-          background: '#f8f8f8',
-          borderRadius: 25,
-          padding: '10px 16px',
-          border: '1.5px solid #e0e0e0',
+          maxWidth: 1200,
+          margin: '0 auto',
+          padding: isDesktop ? '0 20px 16px' : '0 16px 12px',
         }}>
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#999" strokeWidth="2">
-            <circle cx="11" cy="11" r="8"/>
-            <path d="M21 21l-4.35-4.35"/>
-          </svg>
-          <input
-            type="text"
-            placeholder="Search on GlobalMart!"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            style={{
-              flex: 1,
-              border: 'none',
-              background: 'none',
-              marginLeft: 10,
-              fontSize: 15,
-              outline: 'none',
-              fontFamily: theme.fonts.body,
-            }}
-          />
-          <button style={{
-            background: 'none',
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            background: '#f5f5f5',
+            padding: '12px 16px',
             border: 'none',
-            cursor: 'pointer',
-            padding: 4,
           }}>
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#666" strokeWidth="2">
-              <rect x="3" y="3" width="18" height="18" rx="2"/>
-              <circle cx="8.5" cy="8.5" r="1.5" fill="#666"/>
-              <path d="M21 15l-5-5L5 21"/>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#666" strokeWidth="1.5">
+              <circle cx="11" cy="11" r="8"/>
+              <path d="M21 21l-4.35-4.35"/>
             </svg>
-          </button>
-        </div>
+            <input
+              type="text"
+              placeholder="Search GlobalMart"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              style={{
+                flex: 1,
+                border: 'none',
+                background: 'none',
+                marginLeft: 12,
+                fontSize: 14,
+                outline: 'none',
+                fontFamily: theme.fonts.body,
+                color: '#333',
+              }}
+            />
+          </div>
         </div>
       </header>
 
       {/* Main Content */}
       <main style={{ padding: '0 0 20px', maxWidth: 1200, margin: '0 auto' }}>
-        {/* Hero Banner */}
+        {/* Hero Banner - M&S Style */}
         <div style={{
-          background: `linear-gradient(135deg, #667eea 0%, #764ba2 100%)`,
+          background: '#000',
           color: '#fff',
-          padding: isMobile ? '28px 20px' : '50px 40px',
+          padding: isMobile ? '40px 20px' : '60px 40px',
           position: 'relative',
           overflow: 'hidden',
-          borderRadius: isDesktop ? 0 : 0,
         }}>
-          <span style={{
-            position: 'absolute',
-            right: isDesktop ? 100 : isMobile ? -20 : 40,
-            top: '50%',
-            transform: 'translateY(-50%)',
-            fontSize: isDesktop ? 200 : isMobile ? 100 : 140,
-            opacity: 0.15,
+          <div style={{
+            position: 'relative',
+            zIndex: 1,
+            maxWidth: isDesktop ? 600 : 500,
+            textAlign: isDesktop ? 'left' : 'center',
+            margin: isDesktop ? 0 : '0 auto',
           }}>
-            🛍️
-          </span>
-          <div style={{ position: 'relative', zIndex: 1, maxWidth: isDesktop ? 600 : 500 }}>
-            <div style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: 6,
-              background: 'rgba(255,255,255,0.2)',
-              color: '#fff',
-              fontSize: 11,
-              fontWeight: 600,
-              padding: '6px 12px',
-              borderRadius: 4,
-              marginBottom: 14,
-              letterSpacing: 0.5,
+            <p style={{
+              fontSize: 12,
+              fontWeight: 400,
+              letterSpacing: 2,
               textTransform: 'uppercase',
+              marginBottom: 16,
+              opacity: 0.8,
             }}>
-              🇳🇵 🇮🇳 🇵🇰 🇰🇷 Taste of Home
-            </div>
+              International Foods & More
+            </p>
             <h1 style={{
-              fontSize: isDesktop ? 42 : isMobile ? 26 : 36,
+              fontSize: isDesktop ? 48 : isMobile ? 32 : 40,
               fontWeight: 300,
-              lineHeight: 1.2,
+              lineHeight: 1.1,
               margin: 0,
               fontFamily: theme.fonts.primary,
+              letterSpacing: -1,
             }}>
-              Your Home Products<br />
+              Your Home,<br />
               <span style={{ fontWeight: 600 }}>Delivered in Korea</span>
             </h1>
             <p style={{
-              fontSize: isDesktop ? 16 : isMobile ? 13 : 15,
-              opacity: 0.9,
-              marginTop: 12,
-              marginBottom: 20,
-              lineHeight: 1.5,
+              fontSize: isDesktop ? 16 : 14,
+              opacity: 0.7,
+              marginTop: 20,
+              marginBottom: 28,
+              lineHeight: 1.6,
+              fontWeight: 300,
             }}>
-              Authentic products from Nepal, India, Pakistan & Korea. Fast delivery, multilingual support.
+              Authentic products from Nepal, India, Pakistan & more.<br />
+              Free delivery on orders over ₩30,000
             </p>
             <button style={{
               background: '#fff',
-              color: '#667eea',
+              color: '#000',
               border: 'none',
-              padding: '12px 28px',
+              padding: '14px 32px',
               fontSize: 13,
-              fontWeight: 600,
-              borderRadius: 25,
+              fontWeight: 500,
               cursor: 'pointer',
               textTransform: 'uppercase',
-              letterSpacing: 0.5,
+              letterSpacing: 1,
+              fontFamily: theme.fonts.body,
             }}>
               Shop Now
             </button>
           </div>
         </div>
 
-        {/* Category Grid */}
+        {/* Category Grid - M&S Style */}
         <div style={{
           background: '#fff',
-          padding: isDesktop ? '24px 32px' : '20px 16px',
-          borderRadius: isDesktop ? 12 : 0,
+          padding: isDesktop ? '32px 32px' : '24px 16px',
           margin: isDesktop ? '12px 16px' : 0,
         }}>
-          <div style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: 6,
-            background: '#ff4757',
-            color: '#fff',
-            padding: '6px 12px',
-            borderRadius: 4,
-            fontSize: 12,
-            fontWeight: 600,
-            marginBottom: 16,
+          <h2 style={{
+            fontSize: isDesktop ? 24 : 20,
+            fontWeight: 300,
+            color: '#000',
+            margin: '0 0 20px 0',
+            fontFamily: theme.fonts.primary,
+            letterSpacing: -0.5,
           }}>
-            🕐 Time to buy it again!
-          </div>
+            <span style={{ fontWeight: 600 }}>Shop by</span> Category
+          </h2>
 
           <div style={{
             display: 'grid',
@@ -503,44 +469,36 @@ export function HomePage() {
           </div>
         </div>
 
-        {/* Info Banner */}
+        {/* Info Banner - M&S Style */}
         <div style={{
           margin: isDesktop ? '12px 16px' : '12px 16px',
-          background: '#e8f4fd',
-          borderRadius: 8,
-          padding: isDesktop ? '18px 24px' : '14px 16px',
+          background: '#f5f5f5',
+          padding: isDesktop ? '20px 32px' : '16px 20px',
           display: 'flex',
           alignItems: 'center',
-          gap: 12,
+          justifyContent: 'center',
+          gap: 32,
+          flexWrap: 'wrap',
         }}>
-          <div style={{
-            width: 36,
-            height: 36,
-            borderRadius: '50%',
-            background: '#fff',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            fontSize: 18,
-          }}>
-            ℹ️
-          </div>
-          <div style={{ flex: 1 }}>
-            <p style={{ fontSize: 13, fontWeight: 600, margin: 0, color: '#333' }}>
-              Free delivery on orders over ₩30,000
-            </p>
-            <p style={{ fontSize: 11, color: '#666', margin: '2px 0 0' }}>
-              All international cards accepted
-            </p>
-          </div>
+          {[
+            { icon: '🚚', text: 'Free Delivery Over ₩30,000' },
+            { icon: '💳', text: 'International Cards Accepted' },
+            { icon: '🌍', text: 'Worldwide Shipping' },
+          ].map((item, i) => (
+            <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+              <span style={{ fontSize: 18 }}>{item.icon}</span>
+              <span style={{ fontSize: 12, color: '#000', fontWeight: 400, letterSpacing: 0.3 }}>
+                {item.text}
+              </span>
+            </div>
+          ))}
         </div>
 
-        {/* Don't Miss Out Section */}
+        {/* Don't Miss Out Section - M&S Style */}
         <div style={{
           background: '#fff',
-          padding: isDesktop ? '24px 0' : '20px 0',
+          padding: isDesktop ? '32px 0' : '24px 0',
           marginTop: 12,
-          borderRadius: isDesktop ? 12 : 0,
           margin: isDesktop ? '12px 16px' : '12px 0',
         }}>
           <div style={{
@@ -548,26 +506,30 @@ export function HomePage() {
             alignItems: 'center',
             justifyContent: 'space-between',
             padding: isDesktop ? '0 32px' : '0 16px',
-            marginBottom: isDesktop ? 20 : 14,
+            marginBottom: isDesktop ? 24 : 16,
           }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-              <span style={{ fontSize: isDesktop ? 24 : 20 }}>🔔</span>
-              <span style={{ fontSize: isDesktop ? 20 : 17, fontWeight: 600, color: '#333' }}>
-                Don't miss out on these!
-              </span>
-            </div>
+            <h2 style={{
+              fontSize: isDesktop ? 24 : 20,
+              fontWeight: 300,
+              color: '#000',
+              margin: 0,
+              fontFamily: theme.fonts.primary,
+              letterSpacing: -0.5,
+            }}>
+              <span style={{ fontWeight: 600 }}>Trending</span> Now
+            </h2>
             <button style={{
               background: 'none',
-              border: 'none',
-              color: '#667eea',
-              fontSize: 14,
-              fontWeight: 500,
+              border: '1px solid #000',
+              color: '#000',
+              fontSize: 12,
+              fontWeight: 400,
               cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              gap: 4,
+              padding: '8px 16px',
+              textTransform: 'uppercase',
+              letterSpacing: 0.5,
             }}>
-              See more ›
+              View All
             </button>
           </div>
 
@@ -664,36 +626,47 @@ export function HomePage() {
           </div>
         </div>
 
-        {/* Flash Deals Section */}
+        {/* Flash Deals Section - M&S Style */}
         <div style={{
           background: '#fff',
-          padding: isDesktop ? '24px 32px' : '20px 16px',
+          padding: isDesktop ? '32px 32px' : '24px 16px',
           marginTop: 12,
-          borderRadius: isDesktop ? 12 : 0,
           margin: isDesktop ? '12px 16px' : '12px 0',
         }}>
           <div style={{
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
-            marginBottom: isDesktop ? 20 : 14,
+            marginBottom: isDesktop ? 24 : 16,
           }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-              <span style={{ fontSize: isDesktop ? 24 : 20 }}>⚡</span>
-              <span style={{ fontSize: isDesktop ? 20 : 17, fontWeight: 600, color: '#333' }}>
-                Flash Deals
-              </span>
-              <CountdownTimer />
+            <div>
+              <h2 style={{
+                fontSize: isDesktop ? 24 : 20,
+                fontWeight: 300,
+                color: '#000',
+                margin: 0,
+                fontFamily: theme.fonts.primary,
+                letterSpacing: -0.5,
+              }}>
+                <span style={{ fontWeight: 600 }}>Flash</span> Deals
+              </h2>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 6 }}>
+                <span style={{ fontSize: 12, color: '#666' }}>Ends in</span>
+                <CountdownTimer />
+              </div>
             </div>
             <button style={{
               background: 'none',
-              border: 'none',
-              color: '#667eea',
-              fontSize: 14,
+              border: '1px solid #000',
+              color: '#000',
+              fontSize: 12,
               fontWeight: 500,
               cursor: 'pointer',
+              padding: '8px 16px',
+              textTransform: 'uppercase',
+              letterSpacing: 0.5,
             }}>
-              View All ›
+              View All
             </button>
           </div>
 
@@ -715,28 +688,31 @@ export function HomePage() {
           </div>
         </div>
 
-        {/* Popular Products Section */}
+        {/* Popular Products Section - M&S Style */}
         <div style={{
           background: '#fff',
-          padding: isDesktop ? '24px 32px' : '20px 16px',
+          padding: isDesktop ? '32px 32px' : '24px 16px',
           marginTop: 12,
-          borderRadius: isDesktop ? 12 : 0,
           margin: isDesktop ? '12px 16px' : '12px 0',
         }}>
           <div style={{
             display: 'flex',
-            alignItems: 'center',
+            alignItems: 'flex-start',
             justifyContent: 'space-between',
-            marginBottom: isDesktop ? 20 : 14,
+            marginBottom: isDesktop ? 24 : 16,
             flexWrap: 'wrap',
-            gap: 12,
+            gap: 16,
           }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-              <span style={{ fontSize: isDesktop ? 24 : 20 }}>🌍</span>
-              <span style={{ fontSize: isDesktop ? 20 : 17, fontWeight: 600, color: '#333' }}>
-                Popular with Expats in Korea
-              </span>
-            </div>
+            <h2 style={{
+              fontSize: isDesktop ? 24 : 20,
+              fontWeight: 300,
+              color: '#000',
+              margin: 0,
+              fontFamily: theme.fonts.primary,
+              letterSpacing: -0.5,
+            }}>
+              <span style={{ fontWeight: 600 }}>Shop by</span> Origin
+            </h2>
             <div style={{
               display: 'flex',
               gap: 8,
@@ -747,16 +723,17 @@ export function HomePage() {
                   key={f}
                   onClick={() => setActiveFilter(f)}
                   style={{
-                    background: activeFilter === f ? '#667eea' : '#fff',
-                    color: activeFilter === f ? '#fff' : '#333',
-                    border: activeFilter === f ? 'none' : '1px solid #ddd',
+                    background: activeFilter === f ? '#000' : '#fff',
+                    color: activeFilter === f ? '#fff' : '#000',
+                    border: '1px solid #000',
                     padding: isDesktop ? '8px 16px' : '6px 12px',
-                    fontSize: isDesktop ? 13 : 11,
-                    fontWeight: 500,
-                    borderRadius: 20,
+                    fontSize: isDesktop ? 12 : 11,
+                    fontWeight: 400,
                     cursor: 'pointer',
                     whiteSpace: 'nowrap',
                     transition: 'all 0.2s ease',
+                    textTransform: 'uppercase',
+                    letterSpacing: 0.5,
                   }}
                 >
                   {f}
@@ -783,22 +760,23 @@ export function HomePage() {
 
           <button style={{
             width: isDesktop ? 'auto' : '100%',
-            padding: isDesktop ? '14px 40px' : '14px',
-            background: '#f8f8f8',
-            border: '1px solid #ddd',
-            borderRadius: 8,
-            fontSize: 14,
+            padding: '14px 32px',
+            background: '#000',
+            border: 'none',
+            fontSize: 12,
             fontWeight: 500,
-            color: '#333',
+            color: '#fff',
             cursor: 'pointer',
-            marginTop: 20,
+            marginTop: 24,
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             gap: 6,
-            margin: isDesktop ? '20px auto 0' : '16px 0 0',
+            margin: isDesktop ? '24px auto 0' : '20px 0 0',
+            textTransform: 'uppercase',
+            letterSpacing: 1,
           }}>
-            View All Products ›
+            View All Products
           </button>
         </div>
       </main>
