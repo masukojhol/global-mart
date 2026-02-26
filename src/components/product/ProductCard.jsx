@@ -56,7 +56,7 @@ export function RocketBadge({ small = false }) {
   );
 }
 
-export function ProductCard({ product, isDeal = false, onLike, isLiked }) {
+export function ProductCard({ product, isDeal = false, onLike, isLiked, onClick }) {
   const { addItem, openCart } = useCart();
   const { isMobile } = useWindowSize();
   const [isHovered, setIsHovered] = useState(false);
@@ -76,8 +76,13 @@ export function ProductCard({ product, isDeal = false, onLike, isLiked }) {
     onLike?.(product.id);
   };
 
+  const handleClick = () => {
+    onClick?.();
+  };
+
   return (
     <div
+      onClick={handleClick}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       style={{

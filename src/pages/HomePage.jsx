@@ -1,10 +1,9 @@
 import { useState, useEffect } from 'react';
-import { theme, cssVariables } from '../styles/theme';
+import { theme } from '../styles/theme';
 import { useWindowSize } from '../hooks/useWindowSize';
-import { FLASH_DEALS, PRODUCTS, CATEGORIES } from '../data/products';
-import { Header } from '../components/layout/Header';
-import { Footer } from '../components/layout/Footer';
+import { FLASH_DEALS, PRODUCTS } from '../data/products';
 import { ProductCard } from '../components/product/ProductCard';
+import { ProductDetailModal } from '../components/product/ProductDetailModal';
 import { CartDrawer } from '../components/cart/CartDrawer';
 import { AuthModal } from '../components/auth/AuthModal';
 import { CheckoutModal } from '../components/checkout/CheckoutModal';
@@ -12,6 +11,21 @@ import { OrderTrackingModal } from '../components/tracking/OrderTrackingModal';
 import { OrderSuccessModal } from '../components/tracking/OrderSuccessModal';
 import { useCart } from '../contexts/CartContext';
 import { useAuth } from '../contexts/AuthContext';
+import { formatKRW } from '../utils/helpers';
+
+// Category Icons Data
+const CATEGORIES = [
+  { id: 1, icon: '🏠', label: 'Home Products', badge: null },
+  { id: 2, icon: '🚀', label: 'Rocket Delivery', badge: 'FAST' },
+  { id: 3, icon: '🌶️', label: 'Spices', badge: null },
+  { id: 4, icon: '🍚', label: 'Rice & Grains', badge: null },
+  { id: 5, icon: '🎁', label: 'Flash Sales', badge: '8HRS' },
+  { id: 6, icon: '🇳🇵', label: 'Nepal', badge: null },
+  { id: 7, icon: '🇮🇳', label: 'India', badge: null },
+  { id: 8, icon: '🇵🇰', label: 'Pakistan', badge: null },
+  { id: 9, icon: '🍜', label: 'Instant Food', badge: null },
+  { id: 10, icon: '🍪', label: 'Snacks', badge: 'NEW' },
+];
 
 function CountdownTimer() {
   const [time, setTime] = useState({ h: 5, m: 32, s: 15 });
@@ -33,21 +47,19 @@ function CountdownTimer() {
   const pad = (n) => String(n).padStart(2, '0');
 
   return (
-    <div style={{ display: 'flex', gap: 4, alignItems: 'center' }}>
+    <div style={{ display: 'flex', gap: 3, alignItems: 'center', marginLeft: 8 }}>
       {[pad(time.h), pad(time.m), pad(time.s)].map((v, i) => (
-        <span key={i} style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+        <span key={i} style={{ display: 'flex', alignItems: 'center', gap: 2 }}>
           <span style={{
-            background: theme.colors.uiSale,
+            background: '#ff4757',
             color: '#fff',
-            fontFamily: theme.fonts.mono,
-            fontSize: 13,
+            fontFamily: 'DM Mono, monospace',
+            fontSize: 12,
             fontWeight: 500,
-            padding: '4px 8px',
-            borderRadius: 0,
-            minWidth: 28,
-            textAlign: 'center',
+            padding: '4px 6px',
+            borderRadius: 4,
           }}>{v}</span>
-          {i < 2 && <span style={{ fontWeight: 500, fontSize: 14, color: theme.colors.textSecondary }}>:</span>}
+          {i < 2 && <span style={{ fontWeight: 500, fontSize: 12, color: '#999' }}>:</span>}
         </span>
       ))}
     </div>
@@ -56,9 +68,8 @@ function CountdownTimer() {
 
 export function HomePage() {
   const [searchQuery, setSearchQuery] = useState('');
-  const [activeCategory, setActiveCategory] = useState(null);
-  const [showBanner, setShowBanner] = useState(true);
   const [likedProducts, setLikedProducts] = useState(new Set());
+  const [activeTab, setActiveTab] = useState('home');
   const [activeFilter, setActiveFilter] = useState('All');
 
   // Modal states
@@ -68,9 +79,13 @@ export function HomePage() {
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [lastOrder, setLastOrder] = useState(null);
   const [trackingOrderId, setTrackingOrderId] = useState(null);
+  const [selectedProduct, setSelectedProduct] = useState(null);
+  const [showProductDetail, setShowProductDetail] = useState(false);
 
-  const { isMobile, isTablet, getGridColumns } = useWindowSize();
-  const { openCart, isOpen: isCartOpen } = useCart();
+  const { isMobile, width } = useWindowSize();
+  const isDesktop = width >= 1024;
+  const isTablet = width >= 768 && width < 1024;
+  const { openCart, items: cartItems } = useCart();
   const { isAuthenticated } = useAuth();
 
   const toggleLike = (id) => {
@@ -99,146 +114,256 @@ export function HomePage() {
     setShowTrackingModal(true);
   };
 
-  // Filter products based on active filter
-  const filteredProducts = activeFilter === 'All'
-    ? PRODUCTS
-    : PRODUCTS.filter(p => p.categoryLabel === activeFilter.replace(/🇳🇵|🇮🇳|🇵🇰|🇰🇷/g, '').trim());
+  const handleProductClick = (product) => {
+    setSelectedProduct(product);
+    setShowProductDetail(true);
+  };
+
+  const cartCount = cartItems.reduce((sum, item) => sum + item.quantity, 0);
 
   const filterButtons = ['All', '🇳🇵 Nepal', '🇮🇳 India', '🇵🇰 Pakistan', '🇰🇷 Korea'];
 
+  const filteredProducts = activeFilter === 'All'
+    ? PRODUCTS
+    : PRODUCTS.filter(p => p.origin === activeFilter.replace(/🇳🇵|🇮🇳|🇵🇰|🇰🇷/g, '').trim());
+
+  // Responsive grid columns
+  const getGridColumns = () => {
+    if (isDesktop) return 'repeat(4, 1fr)';
+    if (isTablet) return 'repeat(3, 1fr)';
+    return 'repeat(2, 1fr)';
+  };
+
   return (
     <div style={{
-      ...cssVariables,
       fontFamily: theme.fonts.body,
-      background: theme.colors.surfaceCream,
+      background: '#f5f5f5',
       minHeight: '100vh',
-      color: theme.colors.textPrimary,
+      paddingBottom: isDesktop ? 40 : 70,
     }}>
       {/* Google Fonts */}
       <link
-        href="https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;500;600;700&family=Libre+Franklin:wght@300;400;500;600&family=Cormorant+Garamond:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;500;600;700&family=Libre+Franklin:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap"
         rel="stylesheet"
       />
 
-      {/* Keyframes for loading spinner */}
-      <style>{`
-        @keyframes spin {
-          from { transform: rotate(0deg); }
-          to { transform: rotate(360deg); }
-        }
-      `}</style>
-
-      {/* Top Promo Banner */}
-      {showBanner && (
+      {/* Top Header */}
+      <header style={{
+        background: '#fff',
+        padding: '12px 16px',
+        position: 'sticky',
+        top: 0,
+        zIndex: 100,
+        boxShadow: '0 1px 3px rgba(0,0,0,0.08)',
+      }}>
         <div style={{
-          background: theme.colors.brandBlue,
-          color: '#FFFFFF',
-          textAlign: 'center',
-          padding: isMobile ? '10px 40px 10px 16px' : '12px 16px',
-          fontSize: isMobile ? 12 : 13,
-          fontWeight: 400,
-          letterSpacing: 0.3,
-          position: 'relative',
-          fontFamily: theme.fonts.body,
+          maxWidth: 1200,
+          margin: '0 auto',
         }}>
-          🌍 <strong>Taste of Home in Korea</strong> — Nepal 🇳🇵 India 🇮🇳 Pakistan 🇵🇰 & More | <span style={{ fontWeight: 600 }}>Free delivery over ₩30,000</span>
-          <button
-            onClick={() => setShowBanner(false)}
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          marginBottom: 12,
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: isDesktop ? 32 : 8 }}>
+            <span style={{
+              fontSize: isDesktop ? 28 : 24,
+              fontWeight: 700,
+              fontFamily: theme.fonts.primary,
+              background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+            }}>
+              GlobalMart
+            </span>
+
+            {/* Desktop Navigation Links */}
+            {isDesktop && (
+              <div style={{ display: 'flex', gap: 24 }}>
+                {['Home', 'Categories', 'Flash Deals', 'Trending', 'Contact'].map((link) => (
+                  <button
+                    key={link}
+                    style={{
+                      background: 'none',
+                      border: 'none',
+                      fontSize: 14,
+                      fontWeight: 500,
+                      color: link === 'Home' ? '#667eea' : '#333',
+                      cursor: 'pointer',
+                      padding: '8px 0',
+                      position: 'relative',
+                    }}
+                  >
+                    {link}
+                    {link === 'Home' && (
+                      <div style={{
+                        position: 'absolute',
+                        bottom: 0,
+                        left: 0,
+                        right: 0,
+                        height: 2,
+                        background: '#667eea',
+                        borderRadius: 1,
+                      }} />
+                    )}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Desktop Right Actions */}
+          {isDesktop && (
+            <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+              <button
+                onClick={() => setShowAuthModal(true)}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  fontSize: 14,
+                  fontWeight: 500,
+                  color: '#333',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 6,
+                }}
+              >
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#333" strokeWidth="2">
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                  <circle cx="12" cy="7" r="4"/>
+                </svg>
+                Sign In
+              </button>
+              <button
+                onClick={openCart}
+                style={{
+                  background: '#667eea',
+                  border: 'none',
+                  padding: '10px 20px',
+                  borderRadius: 8,
+                  fontSize: 14,
+                  fontWeight: 500,
+                  color: '#fff',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 8,
+                }}
+              >
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2">
+                  <circle cx="9" cy="21" r="1"/>
+                  <circle cx="20" cy="21" r="1"/>
+                  <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+                </svg>
+                Cart ({cartCount})
+              </button>
+            </div>
+          )}
+
+          {!isDesktop && (
+            <button
+              onClick={() => setShowTrackingModal(true)}
+              style={{
+                background: 'none',
+                border: 'none',
+                position: 'relative',
+                cursor: 'pointer',
+                padding: 4,
+              }}
+            >
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#333" strokeWidth="2">
+                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+                <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+              </svg>
+              <span style={{
+                position: 'absolute',
+                top: 0,
+                right: 0,
+                background: '#ff4757',
+                color: '#fff',
+                fontSize: 10,
+                fontWeight: 600,
+                width: 16,
+                height: 16,
+                borderRadius: '50%',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}>
+                3
+              </span>
+            </button>
+          )}
+        </div>
+
+        {/* Search Bar */}
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          background: '#f8f8f8',
+          borderRadius: 25,
+          padding: '10px 16px',
+          border: '1.5px solid #e0e0e0',
+        }}>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#999" strokeWidth="2">
+            <circle cx="11" cy="11" r="8"/>
+            <path d="M21 21l-4.35-4.35"/>
+          </svg>
+          <input
+            type="text"
+            placeholder="Search on GlobalMart!"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
             style={{
-              position: 'absolute',
-              right: 16,
-              top: '50%',
-              transform: 'translateY(-50%)',
-              background: 'none',
+              flex: 1,
               border: 'none',
-              color: '#fff',
-              cursor: 'pointer',
-              fontSize: 18,
-              padding: 4,
+              background: 'none',
+              marginLeft: 10,
+              fontSize: 15,
+              outline: 'none',
+              fontFamily: theme.fonts.body,
             }}
-          >
-            ×
+          />
+          <button style={{
+            background: 'none',
+            border: 'none',
+            cursor: 'pointer',
+            padding: 4,
+          }}>
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#666" strokeWidth="2">
+              <rect x="3" y="3" width="18" height="18" rx="2"/>
+              <circle cx="8.5" cy="8.5" r="1.5" fill="#666"/>
+              <path d="M21 15l-5-5L5 21"/>
+            </svg>
           </button>
         </div>
-      )}
-
-      {/* Header */}
-      <Header
-        searchQuery={searchQuery}
-        setSearchQuery={setSearchQuery}
-        activeCategory={activeCategory}
-        setActiveCategory={setActiveCategory}
-        onOpenAuth={() => setShowAuthModal(true)}
-        onOpenCart={openCart}
-        onOpenTracking={() => {
-          setTrackingOrderId(null);
-          setShowTrackingModal(true);
-        }}
-      />
+        </div>
+      </header>
 
       {/* Main Content */}
-      <main style={{
-        maxWidth: 1280,
-        margin: '0 auto',
-        padding: isMobile ? '20px 16px 60px' : '32px 24px 80px',
-      }}>
-        {/* Value Props Bar */}
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: isMobile ? '1fr 1fr' : 'repeat(4, 1fr)',
-          gap: isMobile ? 8 : 16,
-          marginBottom: isMobile ? 24 : 40,
-        }}>
-          {[
-            { icon: '🏠', title: 'Taste of Home', desc: 'Authentic products' },
-            { icon: '🚀', title: 'Fast Delivery', desc: 'Next day in Korea' },
-            { icon: '💳', title: 'All Cards OK', desc: "Int'l cards accepted" },
-            { icon: '🗣️', title: 'Multi-Language', desc: 'EN, NE, HI, UR, KO' },
-          ].map((item) => (
-            <div key={item.title} style={{
-              background: '#fff',
-              border: `1px solid ${theme.colors.borderLight}`,
-              padding: isMobile ? 12 : '16px 20px',
-              display: 'flex',
-              alignItems: 'center',
-              gap: 12,
-            }}>
-              <span style={{ fontSize: isMobile ? 24 : 28 }}>{item.icon}</span>
-              <div>
-                <p style={{
-                  fontSize: isMobile ? 11 : 12,
-                  fontWeight: 600,
-                  margin: 0,
-                  color: theme.colors.textPrimary,
-                  fontFamily: theme.fonts.primary,
-                }}>{item.title}</p>
-                <p style={{
-                  fontSize: isMobile ? 10 : 11,
-                  color: theme.colors.textMuted,
-                  margin: '2px 0 0',
-                  fontFamily: theme.fonts.body,
-                }}>{item.desc}</p>
-              </div>
-            </div>
-          ))}
-        </div>
-
+      <main style={{ padding: '0 0 20px', maxWidth: 1200, margin: '0 auto' }}>
         {/* Hero Banner */}
         <div style={{
-          background: `linear-gradient(135deg, ${theme.colors.brandBlue} 0%, #0A3299 100%)`,
+          background: `linear-gradient(135deg, #667eea 0%, #764ba2 100%)`,
           color: '#fff',
-          borderRadius: 0,
-          padding: isMobile ? '32px 20px' : isTablet ? '48px 36px' : '56px 56px',
-          marginBottom: isMobile ? 28 : 48,
-          display: 'flex',
-          flexDirection: isMobile ? 'column' : 'row',
-          justifyContent: 'space-between',
-          alignItems: isMobile ? 'flex-start' : 'center',
+          padding: isMobile ? '28px 20px' : '50px 40px',
           position: 'relative',
           overflow: 'hidden',
-          gap: isMobile ? 20 : 0,
+          borderRadius: isDesktop ? 0 : 0,
         }}>
-          <div style={{ position: 'relative', zIndex: 1, maxWidth: isMobile ? '100%' : 480 }}>
+          <span style={{
+            position: 'absolute',
+            right: isDesktop ? 100 : isMobile ? -20 : 40,
+            top: '50%',
+            transform: 'translateY(-50%)',
+            fontSize: isDesktop ? 200 : isMobile ? 100 : 140,
+            opacity: 0.15,
+          }}>
+            🛍️
+          </span>
+          <div style={{ position: 'relative', zIndex: 1, maxWidth: isDesktop ? 600 : 500 }}>
             <div style={{
               display: 'inline-flex',
               alignItems: 'center',
@@ -248,244 +373,390 @@ export function HomePage() {
               fontSize: 11,
               fontWeight: 600,
               padding: '6px 12px',
-              borderRadius: 0,
-              marginBottom: isMobile ? 14 : 20,
-              letterSpacing: 1,
+              borderRadius: 4,
+              marginBottom: 14,
+              letterSpacing: 0.5,
               textTransform: 'uppercase',
-              fontFamily: theme.fonts.primary,
             }}>
-              <span>🇳🇵 🇮🇳 🇵🇰 🇰🇷</span>
-              <span>Taste of Home</span>
+              🇳🇵 🇮🇳 🇵🇰 🇰🇷 Taste of Home
             </div>
             <h1 style={{
-              fontSize: isMobile ? 28 : isTablet ? 36 : 44,
+              fontSize: isDesktop ? 42 : isMobile ? 26 : 36,
               fontWeight: 300,
-              lineHeight: 1.1,
+              lineHeight: 1.2,
               margin: 0,
-              letterSpacing: -1,
-              fontFamily: theme.fonts.accent,
+              fontFamily: theme.fonts.primary,
             }}>
               Your Home Products<br />
-              <span style={{ fontWeight: 500 }}>Delivered in Korea</span>
+              <span style={{ fontWeight: 600 }}>Delivered in Korea</span>
             </h1>
             <p style={{
-              fontSize: isMobile ? 13 : 15,
-              color: 'rgba(255,255,255,0.8)',
-              marginTop: 14,
-              marginBottom: isMobile ? 20 : 28,
-              lineHeight: 1.6,
-              fontFamily: theme.fonts.body,
-              maxWidth: 380,
+              fontSize: isDesktop ? 16 : isMobile ? 13 : 15,
+              opacity: 0.9,
+              marginTop: 12,
+              marginBottom: 20,
+              lineHeight: 1.5,
             }}>
-              Authentic products from Nepal, India, Pakistan & Korea. Fast delivery, multilingual support, all payment methods accepted.
+              Authentic products from Nepal, India, Pakistan & Korea. Fast delivery, multilingual support.
             </p>
-            <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
-              <button style={{
-                background: '#FFFFFF',
-                color: theme.colors.brandBlue,
-                border: 'none',
-                padding: isMobile ? '12px 24px' : '14px 32px',
-                fontSize: 12,
-                fontWeight: 600,
-                borderRadius: 0,
-                cursor: 'pointer',
-                letterSpacing: 1,
-                textTransform: 'uppercase',
-                fontFamily: theme.fonts.primary,
-                transition: 'all 0.2s',
-              }}>
-                Shop Now
-              </button>
-              <button style={{
-                background: 'transparent',
-                color: '#fff',
-                border: '2px solid rgba(255,255,255,0.5)',
-                padding: isMobile ? '10px 20px' : '12px 28px',
-                fontSize: 12,
-                fontWeight: 600,
-                borderRadius: 0,
-                cursor: 'pointer',
-                letterSpacing: 1,
-                textTransform: 'uppercase',
-                fontFamily: theme.fonts.primary,
-              }}>
-                How It Works
-              </button>
-            </div>
-          </div>
-          <div style={{
-            fontSize: isMobile ? 80 : 140,
-            position: isMobile ? 'relative' : 'absolute',
-            right: isMobile ? 0 : 40,
-            opacity: isMobile ? 0.3 : 0.15,
-            alignSelf: isMobile ? 'flex-end' : 'center',
-          }}>
-            🛍️
+            <button style={{
+              background: '#fff',
+              color: '#667eea',
+              border: 'none',
+              padding: '12px 28px',
+              fontSize: 13,
+              fontWeight: 600,
+              borderRadius: 25,
+              cursor: 'pointer',
+              textTransform: 'uppercase',
+              letterSpacing: 0.5,
+            }}>
+              Shop Now
+            </button>
           </div>
         </div>
 
-        {/* Flash Deals Section */}
-        <section style={{ marginBottom: isMobile ? 36 : 56 }}>
+        {/* Category Grid */}
+        <div style={{
+          background: '#fff',
+          padding: isDesktop ? '24px 32px' : '20px 16px',
+          borderRadius: isDesktop ? 12 : 0,
+          margin: isDesktop ? '12px 16px' : 0,
+        }}>
+          <div style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: 6,
+            background: '#ff4757',
+            color: '#fff',
+            padding: '6px 12px',
+            borderRadius: 4,
+            fontSize: 12,
+            fontWeight: 600,
+            marginBottom: 16,
+          }}>
+            🕐 Time to buy it again!
+          </div>
+
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: isDesktop ? 'repeat(10, 1fr)' : 'repeat(5, 1fr)',
+            gap: isDesktop ? '20px 16px' : '16px 8px',
+          }}>
+            {CATEGORIES.map((cat) => (
+              <button
+                key={cat.id}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  gap: 8,
+                  padding: 0,
+                  transition: 'transform 0.2s ease',
+                }}
+                onMouseEnter={(e) => isDesktop && (e.currentTarget.style.transform = 'scale(1.05)')}
+                onMouseLeave={(e) => isDesktop && (e.currentTarget.style.transform = 'scale(1)')}
+              >
+                <div style={{
+                  width: isDesktop ? 64 : 52,
+                  height: isDesktop ? 64 : 52,
+                  borderRadius: 16,
+                  background: '#f8f9fa',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontSize: isDesktop ? 32 : 26,
+                  position: 'relative',
+                  transition: 'box-shadow 0.2s ease',
+                }}>
+                  {cat.icon}
+                  {cat.badge && (
+                    <span style={{
+                      position: 'absolute',
+                      top: -4,
+                      right: -4,
+                      background: cat.badge === 'NEW' ? '#00d68f' : cat.badge === 'FAST' ? '#667eea' : '#ff4757',
+                      color: '#fff',
+                      fontSize: 8,
+                      fontWeight: 700,
+                      padding: '2px 5px',
+                      borderRadius: 4,
+                    }}>
+                      {cat.badge}
+                    </span>
+                  )}
+                </div>
+                <span style={{
+                  fontSize: isDesktop ? 12 : 11,
+                  color: '#333',
+                  textAlign: 'center',
+                  lineHeight: 1.2,
+                  fontWeight: 500,
+                }}>
+                  {cat.label}
+                </span>
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Info Banner */}
+        <div style={{
+          margin: isDesktop ? '12px 16px' : '12px 16px',
+          background: '#e8f4fd',
+          borderRadius: 8,
+          padding: isDesktop ? '18px 24px' : '14px 16px',
+          display: 'flex',
+          alignItems: 'center',
+          gap: 12,
+        }}>
+          <div style={{
+            width: 36,
+            height: 36,
+            borderRadius: '50%',
+            background: '#fff',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            fontSize: 18,
+          }}>
+            ℹ️
+          </div>
+          <div style={{ flex: 1 }}>
+            <p style={{ fontSize: 13, fontWeight: 600, margin: 0, color: '#333' }}>
+              Free delivery on orders over ₩30,000
+            </p>
+            <p style={{ fontSize: 11, color: '#666', margin: '2px 0 0' }}>
+              All international cards accepted
+            </p>
+          </div>
+        </div>
+
+        {/* Don't Miss Out Section */}
+        <div style={{
+          background: '#fff',
+          padding: isDesktop ? '24px 0' : '20px 0',
+          marginTop: 12,
+          borderRadius: isDesktop ? 12 : 0,
+          margin: isDesktop ? '12px 16px' : '12px 0',
+        }}>
           <div style={{
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
-            marginBottom: isMobile ? 16 : 24,
-            flexWrap: 'wrap',
-            gap: 12,
+            padding: isDesktop ? '0 32px' : '0 16px',
+            marginBottom: isDesktop ? 20 : 14,
           }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: isMobile ? 10 : 16 }}>
-              <h2 style={{
-                fontSize: isMobile ? 20 : 26,
-                fontWeight: 300,
-                margin: 0,
-                letterSpacing: -0.5,
-                fontFamily: theme.fonts.primary,
-                color: theme.colors.textPrimary,
-              }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              <span style={{ fontSize: isDesktop ? 24 : 20 }}>🔔</span>
+              <span style={{ fontSize: isDesktop ? 20 : 17, fontWeight: 600, color: '#333' }}>
+                Don't miss out on these!
+              </span>
+            </div>
+            <button style={{
+              background: 'none',
+              border: 'none',
+              color: '#667eea',
+              fontSize: 14,
+              fontWeight: 500,
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: 4,
+            }}>
+              See more ›
+            </button>
+          </div>
+
+          {/* Horizontal Scroll Products */}
+          <div style={{
+            display: 'flex',
+            gap: isDesktop ? 20 : 12,
+            overflowX: 'auto',
+            paddingLeft: isDesktop ? 32 : 16,
+            paddingRight: isDesktop ? 32 : 16,
+            paddingBottom: 8,
+            scrollSnapType: 'x mandatory',
+            WebkitOverflowScrolling: 'touch',
+          }}>
+            {FLASH_DEALS.map((product) => (
+              <div
+                key={product.id}
+                onClick={() => handleProductClick(product)}
+                style={{
+                  minWidth: isDesktop ? 200 : 140,
+                  maxWidth: isDesktop ? 200 : 140,
+                  background: '#fff',
+                  borderRadius: 8,
+                  overflow: 'hidden',
+                  border: '1px solid #eee',
+                  scrollSnapAlign: 'start',
+                  cursor: 'pointer',
+                  transition: 'box-shadow 0.2s ease, transform 0.2s ease',
+                }}
+                onMouseEnter={(e) => {
+                  if (isDesktop) {
+                    e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.1)';
+                    e.currentTarget.style.transform = 'translateY(-2px)';
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (isDesktop) {
+                    e.currentTarget.style.boxShadow = 'none';
+                    e.currentTarget.style.transform = 'translateY(0)';
+                  }
+                }}
+              >
+                <div style={{
+                  aspectRatio: '1/1',
+                  background: '#f8f8f8',
+                  position: 'relative',
+                }}>
+                  <img
+                    src={product.img}
+                    alt={product.name}
+                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                  />
+                  {product.discount && (
+                    <span style={{
+                      position: 'absolute',
+                      top: 8,
+                      left: 8,
+                      background: '#ff4757',
+                      color: '#fff',
+                      fontSize: 11,
+                      fontWeight: 600,
+                      padding: '3px 6px',
+                      borderRadius: 4,
+                    }}>
+                      -{product.discount}%
+                    </span>
+                  )}
+                </div>
+                <div style={{ padding: 10 }}>
+                  <p style={{
+                    fontSize: 12,
+                    color: '#333',
+                    margin: 0,
+                    lineHeight: 1.3,
+                    height: 32,
+                    overflow: 'hidden',
+                    display: '-webkit-box',
+                    WebkitLineClamp: 2,
+                    WebkitBoxOrient: 'vertical',
+                  }}>
+                    {product.name}
+                  </p>
+                  <p style={{
+                    fontSize: 15,
+                    fontWeight: 700,
+                    color: product.discount ? '#ff4757' : '#333',
+                    margin: '6px 0 0',
+                  }}>
+                    ₩{formatKRW(product.salePrice || product.price)}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Flash Deals Section */}
+        <div style={{
+          background: '#fff',
+          padding: isDesktop ? '24px 32px' : '20px 16px',
+          marginTop: 12,
+          borderRadius: isDesktop ? 12 : 0,
+          margin: isDesktop ? '12px 16px' : '12px 0',
+        }}>
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            marginBottom: isDesktop ? 20 : 14,
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              <span style={{ fontSize: isDesktop ? 24 : 20 }}>⚡</span>
+              <span style={{ fontSize: isDesktop ? 20 : 17, fontWeight: 600, color: '#333' }}>
                 Flash Deals
-              </h2>
+              </span>
               <CountdownTimer />
             </div>
             <button style={{
               background: 'none',
-              border: `1.5px solid ${theme.colors.brandPrimary}`,
-              padding: isMobile ? '8px 16px' : '10px 20px',
-              fontSize: 11,
-              fontWeight: 600,
-              borderRadius: 0,
+              border: 'none',
+              color: '#667eea',
+              fontSize: 14,
+              fontWeight: 500,
               cursor: 'pointer',
-              color: theme.colors.brandPrimary,
-              textTransform: 'uppercase',
-              letterSpacing: 1,
-              fontFamily: theme.fonts.primary,
             }}>
-              View All
+              View All ›
             </button>
           </div>
 
           <div style={{
             display: 'grid',
             gridTemplateColumns: getGridColumns(),
-            gap: isMobile ? 10 : 20,
+            gap: isDesktop ? 20 : 10,
           }}>
-            {FLASH_DEALS.map((deal) => (
+            {FLASH_DEALS.slice(0, isDesktop ? 8 : 4).map((product) => (
               <ProductCard
-                key={deal.id}
-                product={deal}
+                key={product.id}
+                product={product}
                 isDeal
                 onLike={toggleLike}
-                isLiked={likedProducts.has(deal.id)}
+                isLiked={likedProducts.has(product.id)}
+                onClick={() => handleProductClick(product)}
               />
             ))}
           </div>
-        </section>
-
-        {/* Why GlobalMart Section */}
-        <div style={{
-          background: '#FFFFFF',
-          border: `1px solid ${theme.colors.borderLight}`,
-          borderRadius: 0,
-          padding: isMobile ? 20 : '28px 36px',
-          marginBottom: isMobile ? 32 : 56,
-          display: 'flex',
-          flexDirection: isMobile ? 'column' : 'row',
-          alignItems: isMobile ? 'flex-start' : 'center',
-          justifyContent: 'space-between',
-          gap: isMobile ? 16 : 24,
-        }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-            <div style={{
-              background: theme.colors.brandBlue,
-              padding: '14px 18px',
-              borderRadius: 0,
-              display: 'flex',
-              alignItems: 'center',
-              gap: 8,
-            }}>
-              <span style={{ fontSize: 24 }}>🏠</span>
-            </div>
-            <div>
-              <h3 style={{
-                fontSize: isMobile ? 15 : 17,
-                fontWeight: 500,
-                margin: 0,
-                color: theme.colors.textPrimary,
-                fontFamily: theme.fonts.primary,
-              }}>
-                Why Expats Choose GlobalMart
-              </h3>
-              <p style={{
-                fontSize: isMobile ? 12 : 13,
-                color: theme.colors.textSecondary,
-                margin: '4px 0 0',
-                fontFamily: theme.fonts.body,
-              }}>
-                Authentic home products • Multilingual • All payment methods • Fast Korea delivery
-              </p>
-            </div>
-          </div>
-          <button style={{
-            background: theme.colors.brandPrimary,
-            color: '#fff',
-            border: 'none',
-            padding: isMobile ? '12px 24px' : '14px 28px',
-            fontSize: 11,
-            fontWeight: 600,
-            borderRadius: 0,
-            cursor: 'pointer',
-            textTransform: 'uppercase',
-            letterSpacing: 1,
-            fontFamily: theme.fonts.primary,
-            width: isMobile ? '100%' : 'auto',
-          }}>
-            Learn More
-          </button>
         </div>
 
-        {/* Products Grid */}
-        <section>
+        {/* Popular Products Section */}
+        <div style={{
+          background: '#fff',
+          padding: isDesktop ? '24px 32px' : '20px 16px',
+          marginTop: 12,
+          borderRadius: isDesktop ? 12 : 0,
+          margin: isDesktop ? '12px 16px' : '12px 0',
+        }}>
           <div style={{
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
-            marginBottom: isMobile ? 16 : 24,
+            marginBottom: isDesktop ? 20 : 14,
             flexWrap: 'wrap',
             gap: 12,
           }}>
-            <h2 style={{
-              fontSize: isMobile ? 20 : 26,
-              fontWeight: 300,
-              margin: 0,
-              letterSpacing: -0.5,
-              fontFamily: theme.fonts.primary,
-              color: theme.colors.textPrimary,
-            }}>
-              Popular with Expats
-            </h2>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              <span style={{ fontSize: isDesktop ? 24 : 20 }}>🌍</span>
+              <span style={{ fontSize: isDesktop ? 20 : 17, fontWeight: 600, color: '#333' }}>
+                Popular with Expats in Korea
+              </span>
+            </div>
             <div style={{
               display: 'flex',
-              gap: 6,
+              gap: 8,
               overflowX: 'auto',
-              flexWrap: isMobile ? 'nowrap' : 'wrap',
             }}>
               {filterButtons.map((f) => (
                 <button
                   key={f}
                   onClick={() => setActiveFilter(f)}
                   style={{
-                    background: activeFilter === f ? theme.colors.brandPrimary : 'transparent',
-                    color: activeFilter === f ? '#fff' : theme.colors.textPrimary,
-                    border: activeFilter === f ? 'none' : `1.5px solid ${theme.colors.borderMedium}`,
-                    padding: isMobile ? '6px 12px' : '8px 16px',
-                    fontSize: 11,
+                    background: activeFilter === f ? '#667eea' : '#fff',
+                    color: activeFilter === f ? '#fff' : '#333',
+                    border: activeFilter === f ? 'none' : '1px solid #ddd',
+                    padding: isDesktop ? '8px 16px' : '6px 12px',
+                    fontSize: isDesktop ? 13 : 11,
                     fontWeight: 500,
-                    borderRadius: 0,
+                    borderRadius: 20,
                     cursor: 'pointer',
                     whiteSpace: 'nowrap',
-                    textTransform: 'uppercase',
-                    letterSpacing: 0.5,
-                    fontFamily: theme.fonts.primary,
+                    transition: 'all 0.2s ease',
                   }}
                 >
                   {f}
@@ -497,22 +768,114 @@ export function HomePage() {
           <div style={{
             display: 'grid',
             gridTemplateColumns: getGridColumns(),
-            gap: isMobile ? 10 : 20,
+            gap: isDesktop ? 20 : 10,
           }}>
-            {filteredProducts.map((product) => (
+            {filteredProducts.slice(0, isDesktop ? 8 : 6).map((product) => (
               <ProductCard
                 key={product.id}
                 product={product}
                 onLike={toggleLike}
                 isLiked={likedProducts.has(product.id)}
+                onClick={() => handleProductClick(product)}
               />
             ))}
           </div>
-        </section>
+
+          <button style={{
+            width: isDesktop ? 'auto' : '100%',
+            padding: isDesktop ? '14px 40px' : '14px',
+            background: '#f8f8f8',
+            border: '1px solid #ddd',
+            borderRadius: 8,
+            fontSize: 14,
+            fontWeight: 500,
+            color: '#333',
+            cursor: 'pointer',
+            marginTop: 20,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: 6,
+            margin: isDesktop ? '20px auto 0' : '16px 0 0',
+          }}>
+            View All Products ›
+          </button>
+        </div>
       </main>
 
-      {/* Footer */}
-      <Footer />
+      {/* Bottom Tab Navigation - Hide on desktop */}
+      <nav style={{
+        position: 'fixed',
+        bottom: 0,
+        left: 0,
+        right: 0,
+        background: '#fff',
+        borderTop: '1px solid #eee',
+        display: isDesktop ? 'none' : 'flex',
+        justifyContent: 'space-around',
+        padding: '8px 0 12px',
+        zIndex: 1000,
+      }}>
+        {[
+          { id: 'home', icon: '🏠', label: 'Home', active: true },
+          { id: 'categories', icon: '📦', label: 'Categories', active: false },
+          { id: 'search', icon: '🔍', label: 'Search', active: false },
+          { id: 'profile', icon: '👤', label: 'Profile', active: false },
+          { id: 'cart', icon: '🛒', label: 'Cart', badge: cartCount, active: false },
+        ].map((tab) => (
+          <button
+            key={tab.id}
+            onClick={() => {
+              if (tab.id === 'cart') openCart();
+              else if (tab.id === 'profile') {
+                if (isAuthenticated) setShowTrackingModal(true);
+                else setShowAuthModal(true);
+              }
+              else setActiveTab(tab.id);
+            }}
+            style={{
+              background: 'none',
+              border: 'none',
+              cursor: 'pointer',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              gap: 2,
+              padding: '4px 12px',
+              position: 'relative',
+            }}
+          >
+            <span style={{ fontSize: 22 }}>{tab.icon}</span>
+            {tab.badge > 0 && (
+              <span style={{
+                position: 'absolute',
+                top: 0,
+                right: 8,
+                background: '#ff4757',
+                color: '#fff',
+                fontSize: 10,
+                fontWeight: 600,
+                minWidth: 18,
+                height: 18,
+                borderRadius: 9,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                padding: '0 4px',
+              }}>
+                {tab.badge}
+              </span>
+            )}
+            <span style={{
+              fontSize: 10,
+              color: tab.active ? '#667eea' : '#999',
+              fontWeight: tab.active ? 600 : 400,
+            }}>
+              {tab.label}
+            </span>
+          </button>
+        ))}
+      </nav>
 
       {/* Modals & Drawers */}
       <CartDrawer onCheckout={handleCheckout} />
@@ -542,6 +905,16 @@ export function HomePage() {
         onClose={() => setShowSuccessModal(false)}
         order={lastOrder}
         onTrackOrder={handleTrackOrder}
+      />
+
+      <ProductDetailModal
+        isOpen={showProductDetail}
+        onClose={() => {
+          setShowProductDetail(false);
+          setSelectedProduct(null);
+        }}
+        product={selectedProduct}
+        onProductClick={handleProductClick}
       />
     </div>
   );

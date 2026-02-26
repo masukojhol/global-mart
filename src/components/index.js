@@ -15,6 +15,7 @@ export { CartDrawer } from './cart/CartDrawer';
 
 // Product Components
 export { ProductCard, StarRating, ProgressBar, RocketBadge } from './product/ProductCard';
+export { ProductDetailModal } from './product/ProductDetailModal';
 
 // Checkout Components
 export { CheckoutModal } from './checkout/CheckoutModal';
