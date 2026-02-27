@@ -9,6 +9,7 @@ import { Modal } from '../common/Modal';
 import { Input, Select } from '../common/Input';
 import { Button } from '../common/Button';
 import { useAuth } from '../../contexts/AuthContext';
+import { useOrders } from '../../contexts/OrderContext';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { tokens } from '../../styles/tokens';
 
@@ -34,6 +35,7 @@ export function AuthModal({ isOpen, onClose }) {
   const [error, setError] = useState('');
   const [countdown, setCountdown] = useState(0);
   const { login, signup } = useAuth();
+  const { initializeDummyOrders } = useOrders();
   const { t } = useLanguage();
 
   // Form state
@@ -156,7 +158,9 @@ export function AuthModal({ isOpen, onClose }) {
 
       // Try to login existing user
       try {
-        await login(fullPhone, 'otp-verified');
+        const user = await login(fullPhone, 'otp-verified');
+        // Initialize dummy orders for demo
+        initializeDummyOrders(user.id);
         onClose();
       } catch (loginErr) {
         // User not found - go to profile step for signup
@@ -180,13 +184,15 @@ export function AuthModal({ isOpen, onClose }) {
 
     try {
       const fullPhone = `${getCountryCode()}${phone}`;
-      await signup({
+      const user = await signup({
         phone: fullPhone,
         name: name.trim(),
         country,
         password: 'otp-verified', // Not used but required by auth context
         email: '', // Optional
       });
+      // Initialize dummy orders for demo
+      initializeDummyOrders(user.id);
       onClose();
     } catch (err) {
       setError(err.message || 'Signup failed. Please try again.');
