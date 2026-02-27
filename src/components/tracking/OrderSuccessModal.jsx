@@ -6,19 +6,22 @@
 
 import { Modal } from '../common/Modal';
 import { Button } from '../common/Button';
+import { useLanguage } from '../../contexts/LanguageContext';
 import { tokens } from '../../styles/tokens';
 import { formatKRW } from '../../utils/helpers';
 
 const { colors, typography, borderRadius, spacing } = tokens;
 
 export function OrderSuccessModal({ isOpen, onClose, order, onTrackOrder }) {
+  const { t } = useLanguage();
+
   if (!order) return null;
 
   return (
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      title="Order placed!"
+      title={t('orderSuccess.title')}
       size="sm"
       showClose={false}
     >
@@ -44,7 +47,7 @@ export function OrderSuccessModal({ isOpen, onClose, order, onTrackOrder }) {
           fontFamily: typography.fontFamily.heading,
           color: colors.text,
         }}>
-          Thank you for your order!
+          {t('orderSuccess.thankYou')}
         </h3>
 
         <p style={{
@@ -52,7 +55,7 @@ export function OrderSuccessModal({ isOpen, onClose, order, onTrackOrder }) {
           color: colors.textSecondary,
           margin: `0 0 ${spacing[6]}px`,
         }}>
-          Your order has been confirmed and is being prepared.
+          {t('orderSuccess.confirmationMessage')}
         </p>
 
         {/* Order Info */}
@@ -71,7 +74,7 @@ export function OrderSuccessModal({ isOpen, onClose, order, onTrackOrder }) {
               textTransform: 'uppercase',
               letterSpacing: typography.letterSpacing.wide,
             }}>
-              Order number
+              {t('orderSuccess.orderNumber')}
             </p>
             <p style={{
               fontSize: typography.fontSize.lg,
@@ -92,7 +95,7 @@ export function OrderSuccessModal({ isOpen, onClose, order, onTrackOrder }) {
               textTransform: 'uppercase',
               letterSpacing: typography.letterSpacing.wide,
             }}>
-              Tracking number
+              {t('orderSuccess.trackingNumber')}
             </p>
             <p style={{
               fontSize: typography.fontSize.base,
@@ -111,7 +114,7 @@ export function OrderSuccessModal({ isOpen, onClose, order, onTrackOrder }) {
             paddingTop: spacing[4],
             borderTop: `1px solid ${colors.border}`,
           }}>
-            <span style={{ fontSize: typography.fontSize.base, fontWeight: typography.fontWeight.medium }}>Total</span>
+            <span style={{ fontSize: typography.fontSize.base, fontWeight: typography.fontWeight.medium }}>{t('common.total')}</span>
             <span style={{
               fontSize: typography.fontSize.lg,
               fontWeight: typography.fontWeight.bold,
@@ -143,14 +146,14 @@ export function OrderSuccessModal({ isOpen, onClose, order, onTrackOrder }) {
                 color: colors.primary,
                 margin: 0,
               }}>
-                Rocket delivery
+                {t('orderSuccess.rocketDelivery')}
               </p>
               <p style={{
                 fontSize: typography.fontSize.xs,
                 color: colors.textSecondary,
                 margin: '2px 0 0',
               }}>
-                Expected by {order.estimatedDelivery}
+                {t('orderSuccess.expectedBy')} {order.estimatedDelivery}
               </p>
             </div>
           </div>
@@ -160,7 +163,7 @@ export function OrderSuccessModal({ isOpen, onClose, order, onTrackOrder }) {
           onClose();
           onTrackOrder(order.id);
         }}>
-          Track order
+          {t('orderSuccess.trackOrder')}
         </Button>
 
         <button
@@ -177,7 +180,7 @@ export function OrderSuccessModal({ isOpen, onClose, order, onTrackOrder }) {
             textDecoration: 'underline',
           }}
         >
-          Continue shopping
+          {t('orderSuccess.continueShopping')}
         </button>
       </div>
     </Modal>

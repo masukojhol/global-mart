@@ -8,8 +8,10 @@ import { tokens } from '../../styles/tokens';
 import { useWindowSize } from '../../hooks/useWindowSize';
 import { useCart } from '../../contexts/CartContext';
 import { useAuth } from '../../contexts/AuthContext';
+import { useLanguage } from '../../contexts/LanguageContext';
 import { CATEGORIES } from '../../data/products';
 import { CountBadge } from '../common/Badge';
+import { LanguageSwitcher } from '../common/LanguageSwitcher';
 
 const { colors, typography, borderRadius, shadows, spacing, transitions } = tokens;
 
@@ -25,6 +27,7 @@ export function Header({
   const { isMobile } = useWindowSize();
   const { itemCount } = useCart();
   const { user, isAuthenticated, logout } = useAuth();
+  const { t } = useLanguage();
 
   return (
     <>
@@ -137,7 +140,7 @@ export function Header({
             }}>
               <input
                 type="text"
-                placeholder="Search fresh groceries..."
+                placeholder={t('header.searchGroceries')}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 style={{
@@ -195,7 +198,7 @@ export function Header({
                   fontWeight: typography.fontWeight.medium,
                   color: colors.textSecondary,
                   fontFamily: typography.fontFamily.body,
-                }}>Track</span>
+                }}>{t('nav.track')}</span>
               </button>
 
               {/* Account */}
@@ -223,7 +226,7 @@ export function Header({
                   color: colors.textSecondary,
                   fontFamily: typography.fontFamily.body,
                 }}>
-                  {isAuthenticated ? user?.name?.split(' ')[0] : 'Account'}
+                  {isAuthenticated ? user?.name?.split(' ')[0] : t('nav.account')}
                 </span>
                 {isAuthenticated && (
                   <span style={{
@@ -252,9 +255,12 @@ export function Header({
                     padding: 0,
                   }}
                 >
-                  Logout
+                  {t('nav.signOut')}
                 </button>
               )}
+
+              {/* Language Switcher */}
+              <LanguageSwitcher variant="toggle" showLabel={false} />
 
               {/* Cart */}
               <button
@@ -281,7 +287,7 @@ export function Header({
                   fontWeight: typography.fontWeight.medium,
                   color: colors.textSecondary,
                   fontFamily: typography.fontFamily.body,
-                }}>Cart</span>
+                }}>{t('nav.cart')}</span>
                 {itemCount > 0 && (
                   <span style={{
                     position: 'absolute',
@@ -375,7 +381,7 @@ export function Header({
           }}>
             <input
               type="text"
-              placeholder="Search fresh groceries..."
+              placeholder={t('header.searchGroceries')}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               style={{

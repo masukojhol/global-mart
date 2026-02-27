@@ -9,6 +9,7 @@ import { Modal } from '../common/Modal';
 import { Input, Select } from '../common/Input';
 import { Button } from '../common/Button';
 import { useAuth } from '../../contexts/AuthContext';
+import { useLanguage } from '../../contexts/LanguageContext';
 import { tokens } from '../../styles/tokens';
 
 const { colors, typography, borderRadius, spacing, transitions } = tokens;
@@ -33,6 +34,7 @@ export function AuthModal({ isOpen, onClose }) {
   const [error, setError] = useState('');
   const [countdown, setCountdown] = useState(0);
   const { login, signup } = useAuth();
+  const { t } = useLanguage();
 
   // Form state
   const [phone, setPhone] = useState('');
@@ -70,7 +72,7 @@ export function AuthModal({ isOpen, onClose }) {
 
   const handleSendOTP = async () => {
     if (!phone || phone.length < 8) {
-      setError('Please enter a valid phone number');
+      setError(t('auth.validPhoneError'));
       return;
     }
 
@@ -93,7 +95,7 @@ export function AuthModal({ isOpen, onClose }) {
         otpRefs.current[0]?.focus();
       }, 100);
     } catch (err) {
-      setError('Failed to send OTP. Please try again.');
+      setError(t('auth.sendOTPFailed'));
     } finally {
       setLoading(false);
     }
@@ -136,7 +138,7 @@ export function AuthModal({ isOpen, onClose }) {
   const handleVerifyOTP = async () => {
     const otpValue = otp.join('');
     if (otpValue.length !== 6) {
-      setError('Please enter the complete 6-digit OTP');
+      setError(t('auth.completeOTPError'));
       return;
     }
 
@@ -161,7 +163,7 @@ export function AuthModal({ isOpen, onClose }) {
         setStep(3);
       }
     } catch (err) {
-      setError('Verification failed. Please try again.');
+      setError(t('auth.verifyFailed'));
     } finally {
       setLoading(false);
     }
@@ -169,7 +171,7 @@ export function AuthModal({ isOpen, onClose }) {
 
   const handleCompleteSignup = async () => {
     if (!name.trim()) {
-      setError('Please enter your name');
+      setError(t('auth.enterNameError'));
       return;
     }
 
@@ -230,19 +232,19 @@ export function AuthModal({ isOpen, onClose }) {
           fontFamily: typography.fontFamily.heading,
           color: colors.text,
         }}>
-          Enter your mobile number
+          {t('auth.enterMobile')}
         </h3>
         <p style={{
           fontSize: typography.fontSize.sm,
           color: colors.textSecondary,
           margin: 0,
         }}>
-          We'll send you a verification code
+          {t('auth.sendOTPDescription')}
         </p>
       </div>
 
       <Select
-        label="Country"
+        label={t('auth.country')}
         value={country}
         onChange={(e) => setCountry(e.target.value)}
         options={COUNTRIES.map(c => ({ value: c.value, label: `${c.label} (${c.code})` }))}
@@ -259,7 +261,7 @@ export function AuthModal({ isOpen, onClose }) {
           textTransform: 'uppercase',
           letterSpacing: typography.letterSpacing.wide,
         }}>
-          Phone Number <span style={{ color: colors.sale }}>*</span>
+          {t('auth.phoneNumber')} <span style={{ color: colors.sale }}>*</span>
         </label>
         <div style={{ display: 'flex', gap: spacing[2] }}>
           <div style={{
@@ -308,7 +310,7 @@ export function AuthModal({ isOpen, onClose }) {
       )}
 
       <Button fullWidth loading={loading} onClick={handleSendOTP}>
-        Send OTP
+        {t('auth.sendOTP')}
       </Button>
 
       <p style={{
@@ -318,7 +320,7 @@ export function AuthModal({ isOpen, onClose }) {
         marginTop: spacing[4],
         marginBottom: 0,
       }}>
-        By continuing, you agree to our Terms of Service and Privacy Policy
+        {t('auth.termsAgreement')}
       </p>
     </>
   );
@@ -346,14 +348,14 @@ export function AuthModal({ isOpen, onClose }) {
           fontFamily: typography.fontFamily.heading,
           color: colors.text,
         }}>
-          Enter verification code
+          {t('auth.enterVerificationCode')}
         </h3>
         <p style={{
           fontSize: typography.fontSize.sm,
           color: colors.textSecondary,
           margin: 0,
         }}>
-          We sent a 6-digit code to<br />
+          {t('auth.sentCodeTo')}<br />
           <strong>{getCountryCode()} {phone}</strong>
         </p>
       </div>
@@ -404,7 +406,7 @@ export function AuthModal({ isOpen, onClose }) {
       )}
 
       <Button fullWidth loading={loading} onClick={handleVerifyOTP}>
-        Verify OTP
+        {t('auth.verifyOTPButton')}
       </Button>
 
       {/* Resend */}
@@ -418,7 +420,7 @@ export function AuthModal({ isOpen, onClose }) {
             color: colors.textMuted,
             margin: 0,
           }}>
-            Resend code in <strong>{countdown}s</strong>
+            {t('auth.resendIn')} <strong>{countdown}s</strong>
           </p>
         ) : (
           <button
@@ -434,7 +436,7 @@ export function AuthModal({ isOpen, onClose }) {
               padding: 0,
             }}
           >
-            Resend OTP
+            {t('auth.resendOTP')}
           </button>
         )}
       </div>
@@ -458,7 +460,7 @@ export function AuthModal({ isOpen, onClose }) {
           textDecoration: 'underline',
         }}
       >
-        Change phone number
+        {t('auth.changePhoneNumber')}
       </button>
 
       {/* Demo hint */}
@@ -472,7 +474,7 @@ export function AuthModal({ isOpen, onClose }) {
         textAlign: 'center',
         borderRadius: borderRadius.default,
       }}>
-        <strong>Demo:</strong> Enter any 6 digits to continue
+        {t('auth.demoHint')}
       </div>
     </>
   );
@@ -500,25 +502,25 @@ export function AuthModal({ isOpen, onClose }) {
           fontFamily: typography.fontFamily.heading,
           color: colors.text,
         }}>
-          Almost done!
+          {t('auth.almostDone')}
         </h3>
         <p style={{
           fontSize: typography.fontSize.sm,
           color: colors.textSecondary,
           margin: 0,
         }}>
-          Just a few more details to complete your account
+          {t('auth.completeDetails')}
         </p>
       </div>
 
       <Input
-        label="Your Name"
+        label={t('auth.yourName')}
         value={name}
         onChange={(e) => {
           setName(e.target.value);
           setError('');
         }}
-        placeholder="Enter your full name"
+        placeholder={t('auth.enterFullName')}
         required
       />
 
@@ -540,7 +542,7 @@ export function AuthModal({ isOpen, onClose }) {
             textTransform: 'uppercase',
             letterSpacing: typography.letterSpacing.wide,
           }}>
-            Verified Phone
+            {t('auth.verifiedPhone')}
           </p>
           <p style={{
             fontSize: typography.fontSize.base,
@@ -572,7 +574,7 @@ export function AuthModal({ isOpen, onClose }) {
       )}
 
       <Button fullWidth loading={loading} onClick={handleCompleteSignup}>
-        Complete signup
+        {t('auth.completeSignup')}
       </Button>
     </>
   );
@@ -581,7 +583,7 @@ export function AuthModal({ isOpen, onClose }) {
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      title={step === 1 ? 'Sign In / Sign Up' : step === 2 ? 'Verify OTP' : 'Complete Profile'}
+      title={step === 1 ? t('auth.signInSignUp') : step === 2 ? t('auth.verifyOTP') : t('auth.completeProfile')}
       size="sm"
     >
       {step === 1 && renderStep1()}

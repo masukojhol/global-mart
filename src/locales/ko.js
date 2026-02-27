@@ -1,0 +1,318 @@
+/**
+ * KOREAN TRANSLATIONS
+ * ===================
+ * All Korean text strings for the GoFresh Market app.
+ */
+
+export const ko = {
+  // Common
+  common: {
+    search: '검색',
+    searchPlaceholder: 'GoFresh 마켓 검색',
+    viewAll: '전체보기',
+    addToCart: '장바구니 담기',
+    buyNow: '바로구매',
+    cancel: '취소',
+    confirm: '확인',
+    close: '닫기',
+    back: '뒤로',
+    next: '다음',
+    continue: '계속하기',
+    submit: '제출',
+    save: '저장',
+    delete: '삭제',
+    edit: '수정',
+    loading: '로딩 중...',
+    error: '오류',
+    success: '성공',
+    required: '필수',
+    optional: '선택',
+    free: '무료',
+    sold: '판매됨',
+    inStock: '재고 있음',
+    outOfStock: '품절',
+    quantity: '수량',
+    total: '총액',
+    subtotal: '소계',
+    shipping: '배송비',
+    discount: '할인',
+    price: '가격',
+    reviews: '리뷰',
+    rating: '평점',
+  },
+
+  // Navigation
+  nav: {
+    home: '홈',
+    categories: '카테고리',
+    flashDeals: '특가 세일',
+    trending: '인기상품',
+    contact: '문의',
+    cart: '장바구니',
+    account: '내 계정',
+    signIn: '로그인',
+    signOut: '로그아웃',
+    track: '배송조회',
+    trackOrder: '주문 조회',
+    storeLocator: '매장 찾기',
+    help: '도움말',
+    wishlist: '찜 목록',
+  },
+
+  // Header
+  header: {
+    searchGroceries: '신선한 식료품 검색...',
+    freeDelivery: '₩30,000 이상 무료배송',
+    tasteOfHome: '한국에서 만나는 고향의 맛',
+    countries: '네팔 🇳🇵 인도 🇮🇳 파키스탄 🇵🇰 & 더보기',
+  },
+
+  // Categories
+  categories: {
+    homeProducts: '홈 제품',
+    rocketDelivery: '로켓배송',
+    spices: '향신료',
+    riceGrains: '쌀 & 곡물',
+    flashSales: '특가 세일',
+    nepal: '네팔',
+    india: '인도',
+    pakistan: '파키스탄',
+    instantFood: '즉석식품',
+    snacks: '과자',
+    newIn: '신상품',
+    grocery: '식료품',
+    fashion: '패션',
+    sale: '세일',
+    korea: '한국',
+  },
+
+  // Home Page
+  home: {
+    heroTitle: '고향의 맛,',
+    heroHighlight: '한국에서 배달',
+    heroSubtitle: '세계 각국의 식품',
+    heroDescription: '네팔, 인도, 파키스탄 등의 정통 제품. ₩30,000 이상 무료배송.',
+    shopNow: '쇼핑하기',
+    shopByCategory: '카테고리별 쇼핑',
+    trendingNow: '지금 인기',
+    flashDeals: '특가 세일',
+    endsIn: '종료까지',
+    shopByOrigin: '원산지별 쇼핑',
+    viewAllProducts: '모든 상품 보기',
+    almostSoldOut: '거의 품절!',
+    claimed: '판매됨',
+    freeDeliveryOver: '₩30,000 이상 무료배송',
+    internationalCards: '해외카드 결제 가능',
+    worldwideShipping: '전 세계 배송',
+  },
+
+  // Product
+  product: {
+    addToCart: '장바구니 담기',
+    buyNow: '바로구매',
+    description: '상품 설명',
+    specifications: '상세 정보',
+    reviews: '리뷰',
+    similarProducts: '비슷한 상품',
+    writeReview: '리뷰 작성',
+    verifiedPurchase: '구매 인증',
+    helpful: '도움됨',
+    rocketDelivery: '로켓배송',
+    arriveBy: '도착 예정',
+    freeShipping: '무료배송',
+    origin: '원산지',
+    weight: '무게',
+    bestSeller: '베스트셀러',
+    new: '신상품',
+    trending: '인기',
+    popular: '인기상품',
+    topRated: '최고 평점',
+  },
+
+  // Cart
+  cart: {
+    title: '장바구니',
+    empty: '장바구니가 비어 있습니다',
+    emptyDescription: '맛있는 상품을 추가해보세요!',
+    startShopping: '쇼핑 시작하기',
+    itemCount: '{count}개 상품',
+    remove: '삭제',
+    checkout: '결제하기',
+    continueShopping: '쇼핑 계속하기',
+    orderSummary: '주문 요약',
+    rocketItems: '로켓배송 상품은 내일 오전 7시까지 도착!',
+    freeShippingMessage: '₩30,000 이상 무료배송',
+    addMoreForFreeShipping: '무료배송까지 ₩{amount} 더 추가하세요',
+  },
+
+  // Checkout
+  checkout: {
+    title: '결제',
+    step: '{current}/{total} 단계',
+    shipping: '배송',
+    payment: '결제',
+    review: '확인',
+    shippingAddress: '배송 주소',
+    paymentMethod: '결제 방법',
+    orderSummary: '주문 요약',
+    placeOrder: '주문하기',
+    fullName: '이름',
+    phone: '전화번호',
+    postalCode: '우편번호',
+    address: '주소',
+    addressDetail: '상세주소',
+    city: '도시',
+    yourName: '이름을 입력하세요',
+    streetAddress: '도로명 주소',
+    aptSuite: '아파트, 동/호수',
+
+    // Payment Methods
+    creditDebitCard: '💳 신용/체크카드',
+    kakaoPay: '🟡 카카오페이',
+    naverPay: '🟢 네이버페이',
+    paypal: '🔵 페이팔',
+    bankTransfer: '🏦 계좌이체',
+    bankTransferReceipt: '🧾 계좌이체 (영수증 업로드)',
+
+    // Card Details
+    cardNumber: '카드번호',
+    expiry: '유효기간',
+    cvv: 'CVV',
+    nameOnCard: '카드 소유자명',
+
+    // Bank Transfer
+    uploadReceipt: '영수증 업로드',
+    receiptUploaded: '영수증 업로드 완료',
+    receiptInstructions: '아래 계좌로 이체 후 영수증을 업로드해주세요:',
+    bankName: '은행명',
+    accountNumber: '계좌번호',
+    accountHolder: '예금주',
+    uploadReceiptButton: '영수증 이미지 업로드',
+    changeReceipt: '영수증 변경',
+    receiptNote: '영수증 확인 후 주문이 처리됩니다 (보통 1-2시간 소요)',
+
+    // Review
+    shippingTo: '배송지',
+    items: '개 상품',
+    totalPaid: '총 결제금액',
+
+    // Errors
+    fillRequired: '필수 항목을 모두 입력해주세요',
+    selectPayment: '결제 방법을 선택해주세요',
+    fillCardDetails: '카드 정보를 모두 입력해주세요',
+    uploadReceiptRequired: '이체 영수증을 업로드해주세요',
+    paymentFailed: '결제에 실패했습니다. 다시 시도해주세요.',
+
+    // Rocket
+    rocketDeliveryMessage: '내일 오전 7시까지 도착합니다!',
+  },
+
+  // Auth
+  auth: {
+    signInSignUp: '로그인 / 회원가입',
+    verifyOTP: 'OTP 인증',
+    completeProfile: '프로필 완성',
+    enterMobile: '휴대폰 번호 입력',
+    sendOTPDescription: '인증번호를 보내드립니다',
+    sendOTP: '인증번호 받기',
+    country: '국가',
+    phoneNumber: '전화번호',
+    enterVerificationCode: '인증번호 입력',
+    sentCodeTo: '6자리 인증번호를 보냈습니다',
+    verifyOTPButton: '인증하기',
+    resendIn: '재전송까지',
+    resendOTP: '인증번호 재전송',
+    changePhoneNumber: '전화번호 변경',
+    demoHint: '데모: 아무 6자리 숫자를 입력하세요',
+    almostDone: '거의 완료!',
+    completeDetails: '계정을 완성하기 위한 몇 가지 정보가 필요합니다',
+    yourName: '이름',
+    enterFullName: '이름을 입력해주세요',
+    verifiedPhone: '인증된 전화번호',
+    completeSignup: '회원가입 완료',
+    termsAgreement: '계속하면 이용약관 및 개인정보 처리방침에 동의하게 됩니다',
+    validPhoneError: '올바른 전화번호를 입력해주세요',
+    completeOTPError: '6자리 인증번호를 모두 입력해주세요',
+    enterNameError: '이름을 입력해주세요',
+    sendOTPFailed: 'OTP 전송에 실패했습니다. 다시 시도해주세요.',
+    verifyFailed: '인증에 실패했습니다. 다시 시도해주세요.',
+  },
+
+  // Order Tracking
+  tracking: {
+    title: '주문 조회',
+    description: '주문번호 또는 송장번호를 입력하여 배송 상태를 확인하세요.',
+    orderIdOrTracking: '주문번호 또는 송장번호',
+    placeholder: '예: GM-XXXXX 또는 TRKXXXXXXXXXX',
+    trackOrder: '조회하기',
+    whereToFind: '주문번호를 어디서 찾나요?',
+    findTip1: '주문 확인 이메일을 확인하세요',
+    findTip2: '내 계정의 "주문 내역"에서 확인하세요',
+    findTip3: '"GM-"으로 시작합니다 (예: GM-ABC123)',
+    notFound: '주문을 찾을 수 없습니다. 주문번호를 확인해주세요.',
+    orderId: '주문번호',
+    status: '상태',
+    trackingNumber: '송장번호',
+    trackingProgress: '배송 진행 상황',
+    orderItems: '주문 상품',
+    shippingAddress: '배송지',
+    trackAnother: '다른 주문 조회',
+    expectedBy: '예상 도착일',
+
+    // Status
+    pending: '대기 중',
+    confirmed: '확인됨',
+    processing: '처리 중',
+    shipped: '배송 중',
+    outForDelivery: '배송 출발',
+    delivered: '배송 완료',
+    cancelled: '취소됨',
+
+    // Status Labels
+    orderConfirmed: '주문 확인',
+    orderProcessing: '상품 준비 중',
+    orderShipped: '배송 시작',
+    orderOutForDelivery: '배송 중',
+    orderDelivered: '배송 완료',
+  },
+
+  // Order Success
+  orderSuccess: {
+    title: '주문 완료!',
+    thankYou: '주문해 주셔서 감사합니다!',
+    confirmationMessage: '주문이 확인되었으며 준비 중입니다.',
+    orderNumber: '주문번호',
+    trackingNumber: '송장번호',
+    total: '총액',
+    rocketDelivery: '로켓배송',
+    expectedBy: '도착 예정',
+    trackOrder: '주문 조회',
+    continueShopping: '쇼핑 계속하기',
+  },
+
+  // Footer
+  footer: {
+    tagline: '전 세계의 신선한 식료품을 한국 문 앞까지 배달합니다.',
+    shop: '쇼핑',
+    help: '도움말',
+    about: '소개',
+    shippingInfo: '배송 안내',
+    returns: '교환/환불',
+    contactUs: '문의하기',
+    faq: 'FAQ',
+    aboutUs: '회사 소개',
+    forExpats: '외국인을 위한 서비스',
+    careers: '채용',
+    blog: '블로그',
+    allRightsReserved: 'All rights reserved.',
+    weAccept: '결제 수단:',
+  },
+
+  // Languages
+  languages: {
+    en: 'English',
+    ko: '한국어',
+  },
+};
+
+export default ko;

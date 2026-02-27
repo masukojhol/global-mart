@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import { tokens } from '../styles/tokens';
 import { useWindowSize } from '../hooks/useWindowSize';
+import { useLanguage } from '../contexts/LanguageContext';
+import { LanguageSwitcher } from '../components/common/LanguageSwitcher';
 
 const { colors, typography, borderRadius, spacing, transitions } = tokens;
 import { FLASH_DEALS, PRODUCTS } from '../data/products';
@@ -359,6 +361,7 @@ export function HomePage() {
   const isTablet = width >= 768 && width < 1024;
   const { openCart, items: cartItems } = useCart();
   const { isAuthenticated } = useAuth();
+  const { t } = useLanguage();
 
   const toggleLike = (id) => {
     setLikedProducts((prev) => {
@@ -442,10 +445,14 @@ export function HomePage() {
               justifyContent: 'flex-end',
               gap: 24,
             }}>
-              {['Store Finder', 'Help', 'Track Order'].map((link) => (
+              {[
+                  { key: 'storeLocator', label: t('nav.storeLocator'), action: undefined },
+                  { key: 'help', label: t('nav.help'), action: undefined },
+                  { key: 'trackOrder', label: t('nav.trackOrder'), action: () => setShowTrackingModal(true) },
+                ].map((link) => (
                 <button
-                  key={link}
-                  onClick={link === 'Track Order' ? () => setShowTrackingModal(true) : undefined}
+                  key={link.key}
+                  onClick={link.action}
                   style={{
                     background: 'none',
                     border: 'none',
@@ -455,9 +462,10 @@ export function HomePage() {
                     fontFamily: typography.fontFamily.body,
                   }}
                 >
-                  {link}
+                  {link.label}
                 </button>
               ))}
+              <LanguageSwitcher variant="toggle" showLabel={true} />
             </div>
           </div>
         )}
@@ -497,9 +505,15 @@ export function HomePage() {
               {/* Desktop Navigation Links */}
               {isDesktop && (
                 <nav style={{ display: 'flex', gap: 28 }}>
-                  {['Home', 'Categories', 'Flash deals', 'Trending', 'Contact'].map((link) => (
+                  {[
+                    { key: 'home', label: t('nav.home') },
+                    { key: 'categories', label: t('nav.categories') },
+                    { key: 'flashDeals', label: t('nav.flashDeals') },
+                    { key: 'trending', label: t('nav.trending') },
+                    { key: 'contact', label: t('nav.contact') },
+                  ].map((link) => (
                     <button
-                      key={link}
+                      key={link.key}
                       style={{
                         background: 'none',
                         border: 'none',
@@ -512,7 +526,7 @@ export function HomePage() {
                         transition: transitions.hover,
                       }}
                     >
-                      {link}
+                      {link.label}
                     </button>
                   ))}
                 </nav>
@@ -538,7 +552,7 @@ export function HomePage() {
                   <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
                   <circle cx="12" cy="7" r="4"/>
                 </svg>
-                {isDesktop && <span style={{ fontSize: 13, color: '#000' }}>Sign In</span>}
+                {isDesktop && <span style={{ fontSize: 13, color: '#000' }}>{t('nav.signIn')}</span>}
               </button>
 
               {/* Cart */}
@@ -561,7 +575,7 @@ export function HomePage() {
                   <line x1="3" y1="6" x2="21" y2="6"/>
                   <path d="M16 10a4 4 0 0 1-8 0"/>
                 </svg>
-                <span style={{ fontSize: typography.fontSize.sm, color: colors.white }}>Cart ({cartCount})</span>
+                <span style={{ fontSize: typography.fontSize.sm, color: colors.white }}>{t('nav.cart')} ({cartCount})</span>
               </button>
             </div>
           </div>
@@ -586,7 +600,7 @@ export function HomePage() {
             </svg>
             <input
               type="text"
-              placeholder="Search GoFresh Market"
+              placeholder={t('common.searchPlaceholder')}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               style={{
@@ -623,7 +637,7 @@ export function HomePage() {
             fontFamily: typography.fontFamily.heading,
             letterSpacing: -0.5,
           }}>
-            <span style={{ fontWeight: 600 }}>Shop by</span> Category
+            {t('home.shopByCategory')}
           </h2>
 
           <div style={{
@@ -703,9 +717,9 @@ export function HomePage() {
           flexWrap: 'wrap',
         }}>
           {[
-            { icon: '🚚', text: 'Free Delivery Over ₩30,000' },
-            { icon: '💳', text: 'International Cards Accepted' },
-            { icon: '🌍', text: 'Worldwide Shipping' },
+            { icon: '🚚', text: t('home.freeDeliveryOver') },
+            { icon: '💳', text: t('home.internationalCards') },
+            { icon: '🌍', text: t('home.worldwideShipping') },
           ].map((item, i) => (
             <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
               <span style={{ fontSize: 18 }}>{item.icon}</span>
@@ -738,7 +752,7 @@ export function HomePage() {
               fontFamily: typography.fontFamily.heading,
               letterSpacing: -0.5,
             }}>
-              <span style={{ fontWeight: 600 }}>Trending</span> Now
+              {t('home.trendingNow')}
             </h2>
             <button style={{
               background: 'none',
@@ -751,7 +765,7 @@ export function HomePage() {
               borderRadius: borderRadius.default,
               transition: transitions.hover,
             }}>
-              View all
+              {t('common.viewAll')}
             </button>
           </div>
 
@@ -871,10 +885,10 @@ export function HomePage() {
                 fontFamily: typography.fontFamily.heading,
                 letterSpacing: -0.5,
               }}>
-                <span style={{ fontWeight: 600 }}>Flash</span> Deals
+                {t('home.flashDeals')}
               </h2>
               <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 6 }}>
-                <span style={{ fontSize: 12, color: '#666' }}>Ends in</span>
+                <span style={{ fontSize: 12, color: '#666' }}>{t('home.endsIn')}</span>
                 <CountdownTimer />
               </div>
             </div>
@@ -889,7 +903,7 @@ export function HomePage() {
               borderRadius: borderRadius.default,
               transition: transitions.hover,
             }}>
-              View all
+              {t('common.viewAll')}
             </button>
           </div>
 
@@ -934,7 +948,7 @@ export function HomePage() {
               fontFamily: typography.fontFamily.heading,
               letterSpacing: -0.5,
             }}>
-              <span style={{ fontWeight: 600 }}>Shop by</span> Origin
+              {t('home.shopByOrigin')}
             </h2>
             <div style={{
               display: 'flex',
@@ -998,7 +1012,7 @@ export function HomePage() {
             borderRadius: borderRadius.default,
             transition: transitions.hover,
           }}>
-            View all products
+            {t('home.viewAllProducts')}
           </button>
         </div>
       </main>
@@ -1017,11 +1031,11 @@ export function HomePage() {
         zIndex: 1000,
       }}>
         {[
-          { id: 'home', icon: '🏠', label: 'Home', active: true },
-          { id: 'categories', icon: '📦', label: 'Categories', active: false },
-          { id: 'search', icon: '🔍', label: 'Search', active: false },
-          { id: 'profile', icon: '👤', label: 'Profile', active: false },
-          { id: 'cart', icon: '🛒', label: 'Cart', badge: cartCount, active: false },
+          { id: 'home', icon: '🏠', label: t('nav.home'), active: true },
+          { id: 'categories', icon: '📦', label: t('nav.categories'), active: false },
+          { id: 'search', icon: '🔍', label: t('common.search'), active: false },
+          { id: 'profile', icon: '👤', label: t('nav.account'), active: false },
+          { id: 'cart', icon: '🛒', label: t('nav.cart'), badge: cartCount, active: false },
         ].map((tab) => (
           <button
             key={tab.id}

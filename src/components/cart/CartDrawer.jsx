@@ -6,6 +6,7 @@
 
 import { useCart } from '../../contexts/CartContext';
 import { useWindowSize } from '../../hooks/useWindowSize';
+import { useLanguage } from '../../contexts/LanguageContext';
 import { tokens } from '../../styles/tokens';
 import { formatKRW, toUSD } from '../../utils/helpers';
 import { Button } from '../common/Button';
@@ -29,6 +30,7 @@ export function CartDrawer({ onCheckout }) {
   } = useCart();
 
   const { isMobile } = useWindowSize();
+  const { t } = useLanguage();
 
   if (!isOpen) return null;
 
@@ -81,7 +83,7 @@ export function CartDrawer({ onCheckout }) {
             gap: spacing[3],
             color: colors.text,
           }}>
-            Shopping cart
+            {t('cart.title')}
             <CountBadge count={itemCount} color={colors.primary} />
           </h2>
           <button
@@ -115,7 +117,7 @@ export function CartDrawer({ onCheckout }) {
               color: colors.textSecondary,
               marginBottom: spacing[2],
             }}>
-              Add <strong style={{ color: colors.primary }}>₩{formatKRW(amountToFreeShipping)}</strong> more for FREE delivery!
+              {t('cart.addMoreForFreeShipping', { amount: formatKRW(amountToFreeShipping) })}
             </p>
             <div style={{
               height: 4,
@@ -146,7 +148,7 @@ export function CartDrawer({ onCheckout }) {
               color: colors.success,
               fontWeight: typography.fontWeight.medium,
             }}>
-              🎉 You qualify for FREE delivery!
+              🎉 {t('cart.freeShippingMessage')}
             </p>
           </div>
         )}
@@ -170,14 +172,14 @@ export function CartDrawer({ onCheckout }) {
                 margin: `0 0 ${spacing[2]}px`,
                 fontFamily: typography.fontFamily.heading,
               }}>
-                Your cart is empty
+                {t('cart.empty')}
               </h3>
               <p style={{
                 fontSize: typography.fontSize.md,
                 color: colors.textSecondary,
                 margin: 0,
               }}>
-                Add items to get started
+                {t('cart.emptyDescription')}
               </p>
             </div>
           ) : (
@@ -320,7 +322,7 @@ export function CartDrawer({ onCheckout }) {
                           padding: 0,
                         }}
                       >
-                        Remove
+                        {t('cart.remove')}
                       </button>
                     </div>
 
@@ -351,7 +353,7 @@ export function CartDrawer({ onCheckout }) {
                 marginBottom: spacing[2],
               }}>
                 <span style={{ fontSize: typography.fontSize.md, color: colors.textSecondary }}>
-                  Subtotal
+                  {t('common.subtotal')}
                 </span>
                 <span style={{ fontSize: typography.fontSize.md, fontWeight: typography.fontWeight.medium }}>
                   ₩{formatKRW(subtotal)}
@@ -363,14 +365,14 @@ export function CartDrawer({ onCheckout }) {
                 marginBottom: spacing[2],
               }}>
                 <span style={{ fontSize: typography.fontSize.md, color: colors.textSecondary }}>
-                  Shipping
+                  {t('common.shipping')}
                 </span>
                 <span style={{
                   fontSize: typography.fontSize.md,
                   fontWeight: typography.fontWeight.medium,
                   color: shippingFee === 0 ? colors.success : colors.text,
                 }}>
-                  {shippingFee === 0 ? 'FREE' : `₩${formatKRW(shippingFee)}`}
+                  {shippingFee === 0 ? t('common.free') : `₩${formatKRW(shippingFee)}`}
                 </span>
               </div>
               <div style={{
@@ -380,7 +382,7 @@ export function CartDrawer({ onCheckout }) {
                 borderTop: `1px solid ${colors.border}`,
               }}>
                 <span style={{ fontSize: typography.fontSize.lg, fontWeight: typography.fontWeight.semibold }}>
-                  Total
+                  {t('common.total')}
                 </span>
                 <div style={{ textAlign: 'right' }}>
                   <span style={{
@@ -411,7 +413,7 @@ export function CartDrawer({ onCheckout }) {
                 alignItems: 'center',
                 gap: spacing[1],
               }}>
-                🚀 Rocket items - Delivery by 7AM tomorrow!
+                🚀 {t('cart.rocketItems')}
               </p>
             )}
 
@@ -422,7 +424,7 @@ export function CartDrawer({ onCheckout }) {
                 onCheckout();
               }}
             >
-              Proceed to checkout
+              {t('cart.checkout')}
             </Button>
 
             <button
@@ -439,7 +441,7 @@ export function CartDrawer({ onCheckout }) {
                 textDecoration: 'underline',
               }}
             >
-              Continue shopping
+              {t('cart.continueShopping')}
             </button>
           </div>
         )}

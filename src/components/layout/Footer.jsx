@@ -6,11 +6,13 @@
 
 import { tokens } from '../../styles/tokens';
 import { useWindowSize } from '../../hooks/useWindowSize';
+import { useLanguage } from '../../contexts/LanguageContext';
 
 const { colors, typography, borderRadius, spacing, transitions } = tokens;
 
 export function Footer() {
   const { isMobile, isTablet } = useWindowSize();
+  const { t } = useLanguage();
 
   return (
     <footer style={{
@@ -55,7 +57,7 @@ export function Footer() {
               maxWidth: 280,
               fontFamily: typography.fontFamily.body,
             }}>
-              Your gateway to fresh groceries and authentic home products. Quality produce from around the world.
+              {t('footer.tagline')}
             </p>
             <div style={{ display: 'flex', gap: spacing[2], marginTop: spacing[4] }}>
               {['🇳🇵 NE', '🇮🇳 HI', '🇵🇰 UR', '🇺🇸 EN'].map((lang) => (
@@ -73,9 +75,9 @@ export function Footer() {
 
           {/* Links Columns */}
           {[
-            { title: 'Shop', links: ['Fruits & Vegetables', 'Dairy & Eggs', 'Meat & Seafood', 'Pantry', 'Beverages'] },
-            { title: 'Help', links: ['Shipping Info', 'Returns', 'Track Order', 'Contact Us', 'FAQ'] },
-            { title: 'About', links: ['About Us', 'Careers', 'Press', 'Blog'] },
+            { title: t('footer.shop'), links: [t('categories.grocery'), t('categories.spices'), t('categories.riceGrains'), t('categories.snacks'), t('categories.instantFood')] },
+            { title: t('footer.help'), links: [t('footer.shippingInfo'), t('footer.returns'), t('nav.trackOrder'), t('footer.contactUs'), t('footer.faq')] },
+            { title: t('footer.about'), links: [t('footer.aboutUs'), t('footer.careers'), t('footer.forExpats'), t('footer.blog')] },
           ].map((col) => (
             <div key={col.title}>
               <h4 style={{
@@ -121,10 +123,10 @@ export function Footer() {
             margin: 0,
             fontFamily: typography.fontFamily.body,
           }}>
-            © 2026 GoFresh Market. All rights reserved.
+            © 2026 GoFresh Market. {t('footer.allRightsReserved')}
           </p>
           <div style={{ display: 'flex', gap: spacing[5], alignItems: 'center' }}>
-            <span style={{ fontSize: typography.fontSize.xs, color: 'rgba(255,255,255,0.4)' }}>We accept:</span>
+            <span style={{ fontSize: typography.fontSize.xs, color: 'rgba(255,255,255,0.4)' }}>{t('footer.weAccept')}</span>
             <div style={{ display: 'flex', gap: spacing[2] }}>
               {['Visa', 'MC', 'Amex', 'PayPal', 'Kakao'].map((card) => (
                 <span key={card} style={{
