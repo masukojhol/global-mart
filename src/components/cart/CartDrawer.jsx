@@ -1,8 +1,17 @@
+/**
+ * CART DRAWER COMPONENT
+ * =====================
+ * Shopping cart drawer using GoFresh design tokens.
+ */
+
 import { useCart } from '../../contexts/CartContext';
 import { useWindowSize } from '../../hooks/useWindowSize';
-import { theme } from '../../styles/theme';
+import { tokens } from '../../styles/tokens';
 import { formatKRW, toUSD } from '../../utils/helpers';
 import { Button } from '../common/Button';
+import { Badge, CountBadge } from '../common/Badge';
+
+const { colors, typography, borderRadius, shadows, spacing, transitions } = tokens;
 
 export function CartDrawer({ onCheckout }) {
   const {
@@ -47,41 +56,33 @@ export function CartDrawer({ onCheckout }) {
           right: 0,
           width: isMobile ? '100%' : 420,
           height: '100%',
-          background: theme.colors.brandWhite,
+          background: colors.background,
           zIndex: 1000,
           display: 'flex',
           flexDirection: 'column',
-          boxShadow: '-4px 0 20px rgba(0, 0, 0, 0.1)',
+          boxShadow: shadows.drawer,
         }}
       >
         {/* Header */}
         <div style={{
-          padding: '20px 24px',
-          borderBottom: `1px solid ${theme.colors.borderLight}`,
+          padding: `${spacing[5]}px ${spacing[6]}px`,
+          borderBottom: `1px solid ${colors.border}`,
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
         }}>
           <h2 style={{
             margin: 0,
-            fontSize: 20,
-            fontWeight: 400,
-            fontFamily: theme.fonts.primary,
+            fontSize: typography.fontSize.xl,
+            fontWeight: typography.fontWeight.semibold,
+            fontFamily: typography.fontFamily.heading,
             display: 'flex',
             alignItems: 'center',
-            gap: 10,
+            gap: spacing[3],
+            color: colors.text,
           }}>
-            Shopping Cart
-            <span style={{
-              background: theme.colors.brandPrimary,
-              color: theme.colors.brandWhite,
-              fontSize: 11,
-              fontWeight: 600,
-              padding: '2px 8px',
-              borderRadius: 10,
-            }}>
-              {itemCount}
-            </span>
+            Shopping cart
+            <CountBadge count={itemCount} color={colors.primary} />
           </h2>
           <button
             onClick={closeCart}
@@ -90,8 +91,11 @@ export function CartDrawer({ onCheckout }) {
               border: 'none',
               fontSize: 28,
               cursor: 'pointer',
-              color: theme.colors.textSecondary,
+              color: colors.textSecondary,
               padding: 0,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
             }}
           >
             ×
@@ -101,28 +105,29 @@ export function CartDrawer({ onCheckout }) {
         {/* Free Shipping Progress */}
         {amountToFreeShipping > 0 && (
           <div style={{
-            padding: '12px 24px',
-            background: theme.colors.surfaceLight,
-            borderBottom: `1px solid ${theme.colors.borderLight}`,
+            padding: `${spacing[3]}px ${spacing[6]}px`,
+            background: colors.backgroundSoft,
+            borderBottom: `1px solid ${colors.border}`,
           }}>
             <p style={{
               margin: 0,
-              fontSize: 12,
-              color: theme.colors.textSecondary,
-              marginBottom: 6,
+              fontSize: typography.fontSize.sm,
+              color: colors.textSecondary,
+              marginBottom: spacing[2],
             }}>
-              Add <strong>₩{formatKRW(amountToFreeShipping)}</strong> more for FREE delivery!
+              Add <strong style={{ color: colors.primary }}>₩{formatKRW(amountToFreeShipping)}</strong> more for FREE delivery!
             </p>
             <div style={{
               height: 4,
-              background: theme.colors.borderLight,
-              borderRadius: 2,
+              background: colors.border,
+              borderRadius: borderRadius.default,
               overflow: 'hidden',
             }}>
               <div style={{
                 width: `${Math.min((subtotal / 30000) * 100, 100)}%`,
                 height: '100%',
-                background: theme.colors.brandBlue,
+                background: colors.primary,
+                borderRadius: borderRadius.default,
                 transition: 'width 0.3s ease',
               }} />
             </div>
@@ -131,15 +136,15 @@ export function CartDrawer({ onCheckout }) {
 
         {amountToFreeShipping <= 0 && (
           <div style={{
-            padding: '12px 24px',
-            background: '#E8F5E9',
-            borderBottom: `1px solid ${theme.colors.borderLight}`,
+            padding: `${spacing[3]}px ${spacing[6]}px`,
+            background: `${colors.success}15`,
+            borderBottom: `1px solid ${colors.border}`,
           }}>
             <p style={{
               margin: 0,
-              fontSize: 12,
-              color: theme.colors.uiSuccess,
-              fontWeight: 500,
+              fontSize: typography.fontSize.sm,
+              color: colors.success,
+              fontWeight: typography.fontWeight.medium,
             }}>
               🎉 You qualify for FREE delivery!
             </p>
@@ -150,41 +155,41 @@ export function CartDrawer({ onCheckout }) {
         <div style={{
           flex: 1,
           overflowY: 'auto',
-          padding: '16px 24px',
+          padding: `${spacing[4]}px ${spacing[6]}px`,
         }}>
           {items.length === 0 ? (
             <div style={{
               textAlign: 'center',
-              padding: '60px 20px',
+              padding: `${spacing[12]}px ${spacing[5]}px`,
             }}>
-              <div style={{ fontSize: 48, marginBottom: 16 }}>🛒</div>
+              <div style={{ fontSize: 48, marginBottom: spacing[4] }}>🛒</div>
               <h3 style={{
-                fontSize: 16,
-                fontWeight: 500,
-                color: theme.colors.textPrimary,
-                margin: '0 0 8px',
-                fontFamily: theme.fonts.primary,
+                fontSize: typography.fontSize.lg,
+                fontWeight: typography.fontWeight.medium,
+                color: colors.text,
+                margin: `0 0 ${spacing[2]}px`,
+                fontFamily: typography.fontFamily.heading,
               }}>
                 Your cart is empty
               </h3>
               <p style={{
-                fontSize: 13,
-                color: theme.colors.textSecondary,
+                fontSize: typography.fontSize.md,
+                color: colors.textSecondary,
                 margin: 0,
               }}>
                 Add items to get started
               </p>
             </div>
           ) : (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: spacing[4] }}>
               {items.map((item) => (
                 <div
                   key={item.id}
                   style={{
                     display: 'flex',
-                    gap: 14,
-                    paddingBottom: 16,
-                    borderBottom: `1px solid ${theme.colors.borderLight}`,
+                    gap: spacing[4],
+                    paddingBottom: spacing[4],
+                    borderBottom: `1px solid ${colors.border}`,
                   }}
                 >
                   {/* Image */}
@@ -192,7 +197,8 @@ export function CartDrawer({ onCheckout }) {
                     width: 80,
                     height: 80,
                     flexShrink: 0,
-                    background: theme.colors.surfaceLight,
+                    background: colors.backgroundSoft,
+                    borderRadius: borderRadius.default,
                     overflow: 'hidden',
                   }}>
                     <img
@@ -209,19 +215,19 @@ export function CartDrawer({ onCheckout }) {
                   {/* Details */}
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <p style={{
-                      fontSize: 9,
-                      color: theme.colors.textMuted,
-                      margin: '0 0 2px',
+                      fontSize: typography.fontSize.xs,
+                      color: colors.textMuted,
+                      margin: `0 0 2px`,
                       textTransform: 'uppercase',
                       letterSpacing: 0.5,
                     }}>
                       {item.flag} {item.category}
                     </p>
                     <p style={{
-                      fontSize: 13,
-                      fontWeight: 400,
-                      margin: '0 0 6px',
-                      color: theme.colors.textPrimary,
+                      fontSize: typography.fontSize.md,
+                      fontWeight: typography.fontWeight.medium,
+                      margin: `0 0 ${spacing[2]}px`,
+                      color: colors.text,
                       overflow: 'hidden',
                       textOverflow: 'ellipsis',
                       whiteSpace: 'nowrap',
@@ -229,17 +235,18 @@ export function CartDrawer({ onCheckout }) {
                       {item.name}
                     </p>
                     <p style={{
-                      fontSize: 14,
-                      fontWeight: 600,
-                      margin: '0 0 8px',
-                      fontFamily: theme.fonts.mono,
+                      fontSize: typography.fontSize.base,
+                      fontWeight: typography.fontWeight.semibold,
+                      margin: `0 0 ${spacing[2]}px`,
+                      fontFamily: typography.fontFamily.mono,
+                      color: colors.text,
                     }}>
                       ₩{formatKRW(item.price)}
                       <span style={{
-                        fontSize: 11,
-                        color: theme.colors.textMuted,
-                        fontWeight: 400,
-                        marginLeft: 6,
+                        fontSize: typography.fontSize.xs,
+                        color: colors.textMuted,
+                        fontWeight: typography.fontWeight.regular,
+                        marginLeft: spacing[2],
                       }}>
                         ≈${toUSD(item.price)}
                       </span>
@@ -249,12 +256,13 @@ export function CartDrawer({ onCheckout }) {
                     <div style={{
                       display: 'flex',
                       alignItems: 'center',
-                      gap: 12,
+                      gap: spacing[3],
                     }}>
                       <div style={{
                         display: 'flex',
                         alignItems: 'center',
-                        border: `1px solid ${theme.colors.borderMedium}`,
+                        border: `1px solid ${colors.border}`,
+                        borderRadius: borderRadius.default,
                       }}>
                         <button
                           onClick={() => updateQuantity(item.id, item.quantity - 1)}
@@ -265,7 +273,10 @@ export function CartDrawer({ onCheckout }) {
                             border: 'none',
                             cursor: 'pointer',
                             fontSize: 14,
-                            color: theme.colors.textSecondary,
+                            color: colors.textSecondary,
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
                           }}
                         >
                           −
@@ -273,8 +284,8 @@ export function CartDrawer({ onCheckout }) {
                         <span style={{
                           width: 32,
                           textAlign: 'center',
-                          fontSize: 13,
-                          fontWeight: 500,
+                          fontSize: typography.fontSize.md,
+                          fontWeight: typography.fontWeight.medium,
                         }}>
                           {item.quantity}
                         </span>
@@ -287,7 +298,10 @@ export function CartDrawer({ onCheckout }) {
                             border: 'none',
                             cursor: 'pointer',
                             fontSize: 14,
-                            color: theme.colors.textSecondary,
+                            color: colors.textSecondary,
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
                           }}
                         >
                           +
@@ -300,8 +314,8 @@ export function CartDrawer({ onCheckout }) {
                           background: 'none',
                           border: 'none',
                           cursor: 'pointer',
-                          fontSize: 11,
-                          color: theme.colors.textMuted,
+                          fontSize: typography.fontSize.xs,
+                          color: colors.textMuted,
                           textDecoration: 'underline',
                           padding: 0,
                         }}
@@ -311,18 +325,8 @@ export function CartDrawer({ onCheckout }) {
                     </div>
 
                     {item.rocket && (
-                      <div style={{
-                        display: 'inline-flex',
-                        alignItems: 'center',
-                        gap: 4,
-                        background: theme.colors.brandBlue,
-                        color: '#fff',
-                        padding: '2px 6px',
-                        fontSize: 9,
-                        fontWeight: 600,
-                        marginTop: 8,
-                      }}>
-                        🚀 Rocket
+                      <div style={{ marginTop: spacing[2] }}>
+                        <Badge variant="primary" size="sm">🚀 Rocket</Badge>
                       </div>
                     )}
                   </div>
@@ -335,36 +339,36 @@ export function CartDrawer({ onCheckout }) {
         {/* Footer */}
         {items.length > 0 && (
           <div style={{
-            padding: '20px 24px',
-            borderTop: `1px solid ${theme.colors.borderLight}`,
-            background: theme.colors.surfaceCream,
+            padding: `${spacing[5]}px ${spacing[6]}px`,
+            borderTop: `1px solid ${colors.border}`,
+            background: colors.backgroundSoft,
           }}>
             {/* Summary */}
-            <div style={{ marginBottom: 16 }}>
+            <div style={{ marginBottom: spacing[4] }}>
               <div style={{
                 display: 'flex',
                 justifyContent: 'space-between',
-                marginBottom: 8,
+                marginBottom: spacing[2],
               }}>
-                <span style={{ fontSize: 13, color: theme.colors.textSecondary }}>
+                <span style={{ fontSize: typography.fontSize.md, color: colors.textSecondary }}>
                   Subtotal
                 </span>
-                <span style={{ fontSize: 13, fontWeight: 500 }}>
+                <span style={{ fontSize: typography.fontSize.md, fontWeight: typography.fontWeight.medium }}>
                   ₩{formatKRW(subtotal)}
                 </span>
               </div>
               <div style={{
                 display: 'flex',
                 justifyContent: 'space-between',
-                marginBottom: 8,
+                marginBottom: spacing[2],
               }}>
-                <span style={{ fontSize: 13, color: theme.colors.textSecondary }}>
+                <span style={{ fontSize: typography.fontSize.md, color: colors.textSecondary }}>
                   Shipping
                 </span>
                 <span style={{
-                  fontSize: 13,
-                  fontWeight: 500,
-                  color: shippingFee === 0 ? theme.colors.uiSuccess : 'inherit',
+                  fontSize: typography.fontSize.md,
+                  fontWeight: typography.fontWeight.medium,
+                  color: shippingFee === 0 ? colors.success : colors.text,
                 }}>
                   {shippingFee === 0 ? 'FREE' : `₩${formatKRW(shippingFee)}`}
                 </span>
@@ -372,24 +376,25 @@ export function CartDrawer({ onCheckout }) {
               <div style={{
                 display: 'flex',
                 justifyContent: 'space-between',
-                paddingTop: 12,
-                borderTop: `1px solid ${theme.colors.borderLight}`,
+                paddingTop: spacing[3],
+                borderTop: `1px solid ${colors.border}`,
               }}>
-                <span style={{ fontSize: 15, fontWeight: 600 }}>
+                <span style={{ fontSize: typography.fontSize.lg, fontWeight: typography.fontWeight.semibold }}>
                   Total
                 </span>
                 <div style={{ textAlign: 'right' }}>
                   <span style={{
                     fontSize: 18,
-                    fontWeight: 700,
-                    fontFamily: theme.fonts.mono,
+                    fontWeight: typography.fontWeight.bold,
+                    fontFamily: typography.fontFamily.mono,
+                    color: colors.primary,
                   }}>
                     ₩{formatKRW(total)}
                   </span>
                   <span style={{
                     display: 'block',
-                    fontSize: 11,
-                    color: theme.colors.textMuted,
+                    fontSize: typography.fontSize.xs,
+                    color: colors.textMuted,
                   }}>
                     ≈${toUSD(total)}
                   </span>
@@ -399,12 +404,12 @@ export function CartDrawer({ onCheckout }) {
 
             {hasRocketItems && (
               <p style={{
-                fontSize: 11,
-                color: theme.colors.brandBlue,
-                margin: '0 0 12px',
+                fontSize: typography.fontSize.xs,
+                color: colors.primary,
+                margin: `0 0 ${spacing[3]}px`,
                 display: 'flex',
                 alignItems: 'center',
-                gap: 4,
+                gap: spacing[1],
               }}>
                 🚀 Rocket items - Delivery by 7AM tomorrow!
               </p>
@@ -417,7 +422,7 @@ export function CartDrawer({ onCheckout }) {
                 onCheckout();
               }}
             >
-              Proceed to Checkout
+              Proceed to checkout
             </Button>
 
             <button
@@ -425,16 +430,16 @@ export function CartDrawer({ onCheckout }) {
               style={{
                 display: 'block',
                 width: '100%',
-                marginTop: 12,
+                marginTop: spacing[3],
                 background: 'none',
                 border: 'none',
-                fontSize: 12,
-                color: theme.colors.textSecondary,
+                fontSize: typography.fontSize.sm,
+                color: colors.textSecondary,
                 cursor: 'pointer',
                 textDecoration: 'underline',
               }}
             >
-              Continue Shopping
+              Continue shopping
             </button>
           </div>
         )}

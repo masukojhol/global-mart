@@ -1,40 +1,46 @@
+/**
+ * PRODUCT CARD COMPONENT
+ * ======================
+ * Product card using GoFresh design tokens.
+ */
+
 import { useState } from 'react';
 import { useCart } from '../../contexts/CartContext';
-import { theme } from '../../styles/theme';
+import { tokens } from '../../styles/tokens';
 import { formatKRW, toUSD } from '../../utils/helpers';
 import { useWindowSize } from '../../hooks/useWindowSize';
+import { Badge } from '../common/Badge';
+import { StarRating } from '../common/StarRating';
 
-export function StarRating({ rating }) {
-  return (
-    <span style={{ color: theme.colors.textPrimary, fontSize: 11, letterSpacing: -0.5 }}>
-      {'★'.repeat(Math.floor(rating))}
-      {rating % 1 >= 0.5 ? '½' : ''}
-      <span style={{ color: theme.colors.textDisabled }}>
-        {'★'.repeat(5 - Math.ceil(rating))}
-      </span>
-    </span>
-  );
-}
+const { colors, typography, borderRadius, shadows, spacing, transitions } = tokens;
+
+// =============================================================================
+// PROGRESS BAR
+// =============================================================================
 
 export function ProgressBar({ percent }) {
   return (
     <div style={{
       width: '100%',
       height: 4,
-      background: theme.colors.borderLight,
-      borderRadius: 0,
+      background: colors.border,
+      borderRadius: borderRadius.default,
       overflow: 'hidden',
     }}>
       <div style={{
         width: `${percent}%`,
         height: '100%',
-        borderRadius: 0,
-        background: percent > 80 ? theme.colors.uiSale : theme.colors.textPrimary,
+        borderRadius: borderRadius.default,
+        background: percent > 80 ? colors.sale : colors.primary,
         transition: 'width 0.6s ease',
       }} />
     </div>
   );
 }
+
+// =============================================================================
+// ROCKET BADGE
+// =============================================================================
 
 export function RocketBadge({ small = false }) {
   return (
@@ -42,12 +48,12 @@ export function RocketBadge({ small = false }) {
       display: 'inline-flex',
       alignItems: 'center',
       gap: 4,
-      background: theme.colors.brandBlue,
-      color: '#fff',
+      background: colors.primary,
+      color: colors.white,
       padding: small ? '2px 6px' : '4px 8px',
-      borderRadius: 0,
+      borderRadius: borderRadius.default,
       fontSize: small ? 9 : 10,
-      fontWeight: 600,
+      fontWeight: typography.fontWeight.semibold,
       letterSpacing: 0.3,
     }}>
       <span>🚀</span>
@@ -55,6 +61,10 @@ export function RocketBadge({ small = false }) {
     </div>
   );
 }
+
+// =============================================================================
+// PRODUCT CARD
+// =============================================================================
 
 export function ProductCard({ product, isDeal = false, onLike, isLiked, onClick }) {
   const { addItem, openCart } = useCart();
@@ -76,23 +86,28 @@ export function ProductCard({ product, isDeal = false, onLike, isLiked, onClick 
     onLike?.(product.id);
   };
 
-  const handleClick = () => {
-    onClick?.();
+  // Determine badge variant
+  const getBadgeVariant = (tag) => {
+    if (tag === 'New' || tag === 'Trending') return 'new';
+    if (tag === 'Organic') return 'organic';
+    if (tag === 'Bestseller') return 'bestseller';
+    return 'info';
   };
 
   return (
     <div
-      onClick={handleClick}
+      onClick={onClick}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       style={{
-        background: theme.colors.brandWhite,
-        borderRadius: 0,
+        background: colors.backgroundCard,
+        borderRadius: borderRadius.default,
         overflow: 'hidden',
-        border: `1px solid ${theme.colors.borderLight}`,
+        border: `1px solid ${colors.border}`,
         cursor: 'pointer',
-        boxShadow: isHovered ? theme.shadows.hover : 'none',
-        transition: 'all 0.3s ease',
+        boxShadow: isHovered ? shadows.cardHover : 'none',
+        transform: isHovered ? 'translateY(-2px)' : 'none',
+        transition: `box-shadow ${transitions.cardHover}, transform ${transitions.cardHover}`,
       }}
     >
       {/* Image */}
@@ -101,7 +116,7 @@ export function ProductCard({ product, isDeal = false, onLike, isLiked, onClick 
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        background: theme.colors.surfaceLight,
+        background: colors.backgroundSoft,
         position: 'relative',
         overflow: 'hidden',
       }}>
@@ -119,42 +134,26 @@ export function ProductCard({ product, isDeal = false, onLike, isLiked, onClick 
 
         {/* Discount Badge */}
         {discount && (
-          <span style={{
+          <div style={{
             position: 'absolute',
-            top: isMobile ? 6 : 10,
-            left: isMobile ? 6 : 10,
-            background: theme.colors.uiSale,
-            color: '#fff',
-            fontSize: 10,
-            fontWeight: 700,
-            padding: '4px 8px',
-            borderRadius: 0,
-            letterSpacing: 0.5,
-            fontFamily: theme.fonts.primary,
+            top: isMobile ? 6 : 8,
+            left: isMobile ? 6 : 8,
           }}>
-            -{discount}%
-          </span>
+            <Badge variant="sale" size="sm">-{discount}%</Badge>
+          </div>
         )}
 
         {/* Tag Badge */}
         {product.tag && !discount && (
-          <span style={{
+          <div style={{
             position: 'absolute',
-            top: isMobile ? 6 : 10,
-            left: isMobile ? 6 : 10,
-            background: product.tag === 'New' || product.tag === 'Trending' ? theme.colors.brandPrimary : theme.colors.brandWhite,
-            color: product.tag === 'New' || product.tag === 'Trending' ? '#fff' : theme.colors.brandPrimary,
-            fontSize: 9,
-            fontWeight: 700,
-            padding: '4px 8px',
-            borderRadius: 0,
-            border: (product.tag !== 'New' && product.tag !== 'Trending') ? `1px solid ${theme.colors.borderMedium}` : 'none',
-            letterSpacing: 0.5,
-            textTransform: 'uppercase',
-            fontFamily: theme.fonts.primary,
+            top: isMobile ? 6 : 8,
+            left: isMobile ? 6 : 8,
           }}>
-            {product.tag}
-          </span>
+            <Badge variant={getBadgeVariant(product.tag)} size="sm">
+              {product.tag}
+            </Badge>
+          </div>
         )}
 
         {/* Like Button */}
@@ -162,26 +161,27 @@ export function ProductCard({ product, isDeal = false, onLike, isLiked, onClick 
           onClick={handleLike}
           style={{
             position: 'absolute',
-            top: isMobile ? 6 : 10,
-            right: isMobile ? 6 : 10,
-            background: '#fff',
+            top: isMobile ? 6 : 8,
+            right: isMobile ? 6 : 8,
+            background: colors.white,
             border: 'none',
             width: isMobile ? 30 : 34,
             height: isMobile ? 30 : 34,
-            borderRadius: '50%',
+            borderRadius: borderRadius.circle,
             cursor: 'pointer',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+            boxShadow: shadows.sm,
+            transition: transitions.hover,
           }}
         >
           <svg
             width="16"
             height="16"
             viewBox="0 0 24 24"
-            fill={isLiked ? theme.colors.uiSale : 'none'}
-            stroke={isLiked ? theme.colors.uiSale : theme.colors.textPrimary}
+            fill={isLiked ? colors.sale : 'none'}
+            stroke={isLiked ? colors.sale : colors.text}
             strokeWidth="1.5"
           >
             <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z" />
@@ -190,34 +190,34 @@ export function ProductCard({ product, isDeal = false, onLike, isLiked, onClick 
 
         {/* Rocket Badge */}
         {product.rocket && (
-          <div style={{ position: 'absolute', bottom: isMobile ? 6 : 10, left: isMobile ? 6 : 10 }}>
+          <div style={{ position: 'absolute', bottom: isMobile ? 6 : 8, left: isMobile ? 6 : 8 }}>
             <RocketBadge small />
           </div>
         )}
       </div>
 
       {/* Content */}
-      <div style={{ padding: isMobile ? 10 : 14 }}>
+      <div style={{ padding: isMobile ? spacing[3] : spacing[4] }}>
         {/* Category */}
         <span style={{
-          fontSize: 9,
-          fontWeight: 600,
-          color: theme.colors.textMuted,
+          fontSize: typography.fontSize.xs,
+          fontWeight: typography.fontWeight.medium,
+          color: colors.textMuted,
           textTransform: 'uppercase',
-          letterSpacing: 0.8,
-          fontFamily: theme.fonts.primary,
+          letterSpacing: typography.letterSpacing.wider,
+          fontFamily: typography.fontFamily.body,
         }}>
           {product.flag} {product.categoryLabel || product.category}
         </span>
 
         {/* Name */}
         <p style={{
-          fontSize: isMobile ? 12 : 13,
-          fontWeight: 400,
+          fontSize: isMobile ? typography.fontSize.sm : typography.fontSize.base,
+          fontWeight: typography.fontWeight.semibold,
           margin: '4px 0 8px',
-          lineHeight: 1.4,
-          color: theme.colors.textPrimary,
-          fontFamily: theme.fonts.body,
+          lineHeight: typography.lineHeight.normal,
+          color: colors.text,
+          fontFamily: typography.fontFamily.body,
           overflow: 'hidden',
           textOverflow: 'ellipsis',
           display: '-webkit-box',
@@ -231,16 +231,16 @@ export function ProductCard({ product, isDeal = false, onLike, isLiked, onClick 
         {/* Price */}
         <div style={{ marginBottom: 6 }}>
           <span style={{
-            fontSize: isMobile ? 15 : 17,
-            fontWeight: 700,
-            color: isDeal ? theme.colors.uiSale : theme.colors.textPrimary,
-            fontFamily: theme.fonts.mono,
+            fontSize: isMobile ? 15 : typography.fontSize.lg,
+            fontWeight: typography.fontWeight.bold,
+            color: isDeal ? colors.sale : colors.text,
+            fontFamily: typography.fontFamily.mono,
           }}>
             ₩{formatKRW(price)}
           </span>
           <span style={{
-            fontSize: 11,
-            color: theme.colors.textMuted,
+            fontSize: typography.fontSize.xs,
+            color: colors.textMuted,
             marginLeft: 6,
           }}>
             ≈${toUSD(price)}
@@ -250,9 +250,10 @@ export function ProductCard({ product, isDeal = false, onLike, isLiked, onClick 
         {/* Original Price */}
         {originalPrice && (
           <span style={{
-            fontSize: isMobile ? 11 : 12,
-            color: theme.colors.textMuted,
+            fontSize: isMobile ? typography.fontSize.xs : typography.fontSize.sm,
+            color: colors.textMuted,
             textDecoration: 'line-through',
+            fontFamily: typography.fontFamily.mono,
           }}>
             ₩{formatKRW(originalPrice)}
           </span>
@@ -260,8 +261,8 @@ export function ProductCard({ product, isDeal = false, onLike, isLiked, onClick 
 
         {/* Rating */}
         <div style={{ display: 'flex', alignItems: 'center', gap: 6, margin: '8px 0' }}>
-          <StarRating rating={product.rating} />
-          <span style={{ fontSize: 10, color: theme.colors.textMuted }}>
+          <StarRating rating={product.rating} size="compact" />
+          <span style={{ fontSize: typography.fontSize.xs, color: colors.textMuted }}>
             ({formatKRW(product.reviews)})
           </span>
         </div>
@@ -271,9 +272,9 @@ export function ProductCard({ product, isDeal = false, onLike, isLiked, onClick 
           <>
             <ProgressBar percent={product.sold} />
             <p style={{
-              fontSize: 10,
-              color: product.sold > 85 ? theme.colors.uiSale : theme.colors.textSecondary,
-              fontWeight: product.sold > 85 ? 600 : 400,
+              fontSize: typography.fontSize.xs,
+              color: product.sold > 85 ? colors.sale : colors.textSecondary,
+              fontWeight: product.sold > 85 ? typography.fontWeight.semibold : typography.fontWeight.regular,
               marginTop: 5,
               marginBottom: 0,
             }}>
@@ -287,22 +288,29 @@ export function ProductCard({ product, isDeal = false, onLike, isLiked, onClick 
           <button
             onClick={handleAddToCart}
             style={{
-              background: theme.colors.brandPrimary,
-              color: '#fff',
+              background: colors.primary,
+              color: colors.white,
               border: 'none',
               padding: isMobile ? '10px 14px' : '11px 18px',
-              fontSize: 11,
-              fontWeight: 600,
-              borderRadius: 0,
+              fontSize: typography.fontSize.sm,
+              fontWeight: typography.fontWeight.semibold,
+              borderRadius: borderRadius.default,
               cursor: 'pointer',
               width: '100%',
-              marginTop: 8,
-              textTransform: 'uppercase',
-              letterSpacing: 0.8,
-              fontFamily: theme.fonts.primary,
+              marginTop: spacing[2],
+              fontFamily: typography.fontFamily.body,
+              transition: transitions.hover,
+              // Sentence case, not uppercase
+              textTransform: 'none',
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = colors.primaryLight;
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = colors.primary;
             }}
           >
-            Add to Cart
+            Add to cart
           </button>
         )}
       </div>

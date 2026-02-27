@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
-import { theme } from '../styles/theme';
+import { tokens } from '../styles/tokens';
 import { useWindowSize } from '../hooks/useWindowSize';
+
+const { colors, typography, borderRadius, spacing, transitions } = tokens;
 import { FLASH_DEALS, PRODUCTS } from '../data/products';
 import { ProductCard } from '../components/product/ProductCard';
 import { ProductDetailModal } from '../components/product/ProductDetailModal';
@@ -146,7 +148,7 @@ function HeroBannerCarousel({ isMobile, isDesktop }) {
               fontWeight: 300,
               lineHeight: 1.1,
               margin: 0,
-              fontFamily: theme.fonts.primary,
+              fontFamily: typography.fontFamily.heading,
               letterSpacing: -0.5,
               color: '#000',
             }}>
@@ -164,18 +166,17 @@ function HeroBannerCarousel({ isMobile, isDesktop }) {
               {banner.description}
             </p>
             <button style={{
-              background: '#000',
-              color: '#fff',
+              background: colors.primary,
+              color: colors.white,
               border: 'none',
               padding: '14px 32px',
-              fontSize: 12,
-              fontWeight: 500,
+              fontSize: typography.fontSize.xs,
+              fontWeight: typography.fontWeight.semibold,
               cursor: 'pointer',
-              textTransform: 'uppercase',
-              letterSpacing: 1,
-              fontFamily: theme.fonts.body,
-              transition: 'all 0.3s ease',
-              borderRadius: 25,
+              letterSpacing: 0.5,
+              fontFamily: typography.fontFamily.body,
+              transition: transitions.hover,
+              borderRadius: borderRadius.pill,
             }}>
               {banner.cta}
             </button>
@@ -286,7 +287,7 @@ function HeroBannerCarousel({ isMobile, isDesktop }) {
               width: currentSlide === index ? 24 : 8,
               height: 8,
               borderRadius: 4,
-              background: currentSlide === index ? '#000' : '#ccc',
+              background: currentSlide === index ? colors.primary : colors.border,
               border: 'none',
               cursor: 'pointer',
               transition: 'all 0.3s ease',
@@ -322,15 +323,15 @@ function CountdownTimer() {
       {[pad(time.h), pad(time.m), pad(time.s)].map((v, i) => (
         <span key={i} style={{ display: 'flex', alignItems: 'center', gap: 2 }}>
           <span style={{
-            background: '#ff4757',
-            color: '#fff',
-            fontFamily: 'DM Mono, monospace',
-            fontSize: 12,
-            fontWeight: 500,
+            background: colors.sale,
+            color: colors.white,
+            fontFamily: typography.fontFamily.mono,
+            fontSize: typography.fontSize.xs,
+            fontWeight: typography.fontWeight.medium,
             padding: '4px 6px',
-            borderRadius: 4,
+            borderRadius: borderRadius.default,
           }}>{v}</span>
-          {i < 2 && <span style={{ fontWeight: 500, fontSize: 12, color: '#999' }}>:</span>}
+          {i < 2 && <span style={{ fontWeight: typography.fontWeight.medium, fontSize: typography.fontSize.xs, color: colors.textMuted }}>:</span>}
         </span>
       ))}
     </div>
@@ -407,7 +408,7 @@ export function HomePage() {
 
   return (
     <div style={{
-      fontFamily: theme.fonts.body,
+      fontFamily: typography.fontFamily.body,
       background: '#f5f5f5',
       minHeight: '100vh',
       paddingBottom: isDesktop ? 40 : 70,
@@ -451,7 +452,7 @@ export function HomePage() {
                     fontSize: 12,
                     color: '#333',
                     cursor: 'pointer',
-                    fontFamily: theme.fonts.body,
+                    fontFamily: typography.fontFamily.body,
                   }}
                 >
                   {link}
@@ -478,28 +479,37 @@ export function HomePage() {
               <span style={{
                 fontSize: isDesktop ? 28 : 22,
                 fontWeight: 300,
-                fontFamily: theme.fonts.primary,
-                color: '#000',
+                fontFamily: typography.fontFamily.heading,
+                color: colors.text,
                 letterSpacing: -1,
               }}>
-                <span style={{ fontWeight: 700 }}>Global</span>Mart
+                <span style={{ fontWeight: 700, color: colors.primary }}>Go</span>
+                <span style={{ fontWeight: 700 }}>Fresh</span>
+                <span style={{
+                  fontSize: 10,
+                  fontWeight: 600,
+                  color: colors.primary,
+                  marginLeft: 6,
+                  letterSpacing: 0.5
+                }}>MARKET</span>
               </span>
 
               {/* Desktop Navigation Links */}
               {isDesktop && (
                 <nav style={{ display: 'flex', gap: 28 }}>
-                  {['Home', 'Categories', 'Flash Deals', 'Trending', 'Contact'].map((link) => (
+                  {['Home', 'Categories', 'Flash deals', 'Trending', 'Contact'].map((link) => (
                     <button
                       key={link}
                       style={{
                         background: 'none',
                         border: 'none',
-                        fontSize: 14,
-                        fontWeight: 400,
-                        color: '#000',
+                        fontSize: typography.fontSize.sm,
+                        fontWeight: typography.fontWeight.medium,
+                        color: colors.text,
                         cursor: 'pointer',
                         padding: '4px 0',
-                        fontFamily: theme.fonts.body,
+                        fontFamily: typography.fontFamily.body,
+                        transition: transitions.hover,
                       }}
                     >
                       {link}
@@ -535,21 +545,23 @@ export function HomePage() {
               <button
                 onClick={openCart}
                 style={{
-                  background: '#000',
+                  background: colors.primary,
                   border: 'none',
                   cursor: 'pointer',
                   padding: '8px 16px',
                   display: 'flex',
                   alignItems: 'center',
                   gap: 8,
+                  borderRadius: borderRadius.default,
+                  transition: transitions.hover,
                 }}
               >
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="1.5">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={colors.white} strokeWidth="1.5">
                   <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
                   <line x1="3" y1="6" x2="21" y2="6"/>
                   <path d="M16 10a4 4 0 0 1-8 0"/>
                 </svg>
-                <span style={{ fontSize: 13, color: '#fff' }}>Cart ({cartCount})</span>
+                <span style={{ fontSize: typography.fontSize.sm, color: colors.white }}>Cart ({cartCount})</span>
               </button>
             </div>
           </div>
@@ -574,7 +586,7 @@ export function HomePage() {
             </svg>
             <input
               type="text"
-              placeholder="Search GlobalMart"
+              placeholder="Search GoFresh Market"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               style={{
@@ -584,7 +596,7 @@ export function HomePage() {
                 marginLeft: 12,
                 fontSize: 14,
                 outline: 'none',
-                fontFamily: theme.fonts.body,
+                fontFamily: typography.fontFamily.body,
                 color: '#333',
               }}
             />
@@ -608,7 +620,7 @@ export function HomePage() {
             fontWeight: 300,
             color: '#000',
             margin: '0 0 20px 0',
-            fontFamily: theme.fonts.primary,
+            fontFamily: typography.fontFamily.heading,
             letterSpacing: -0.5,
           }}>
             <span style={{ fontWeight: 600 }}>Shop by</span> Category
@@ -654,12 +666,12 @@ export function HomePage() {
                       position: 'absolute',
                       top: -4,
                       right: -4,
-                      background: cat.badge === 'NEW' ? '#00d68f' : cat.badge === 'FAST' ? '#667eea' : '#ff4757',
-                      color: '#fff',
+                      background: cat.badge === 'NEW' ? colors.success : cat.badge === 'FAST' ? colors.primary : colors.sale,
+                      color: colors.white,
                       fontSize: 8,
-                      fontWeight: 700,
+                      fontWeight: typography.fontWeight.bold,
                       padding: '2px 5px',
-                      borderRadius: 4,
+                      borderRadius: borderRadius.default,
                     }}>
                       {cat.badge}
                     </span>
@@ -723,23 +735,23 @@ export function HomePage() {
               fontWeight: 300,
               color: '#000',
               margin: 0,
-              fontFamily: theme.fonts.primary,
+              fontFamily: typography.fontFamily.heading,
               letterSpacing: -0.5,
             }}>
               <span style={{ fontWeight: 600 }}>Trending</span> Now
             </h2>
             <button style={{
               background: 'none',
-              border: '1px solid #000',
-              color: '#000',
-              fontSize: 12,
-              fontWeight: 400,
+              border: `1px solid ${colors.primary}`,
+              color: colors.primary,
+              fontSize: typography.fontSize.xs,
+              fontWeight: typography.fontWeight.medium,
               cursor: 'pointer',
               padding: '8px 16px',
-              textTransform: 'uppercase',
-              letterSpacing: 0.5,
+              borderRadius: borderRadius.default,
+              transition: transitions.hover,
             }}>
-              View All
+              View all
             </button>
           </div>
 
@@ -797,12 +809,12 @@ export function HomePage() {
                       position: 'absolute',
                       top: 8,
                       left: 8,
-                      background: '#ff4757',
-                      color: '#fff',
-                      fontSize: 11,
-                      fontWeight: 600,
+                      background: colors.sale,
+                      color: colors.white,
+                      fontSize: typography.fontSize.xs,
+                      fontWeight: typography.fontWeight.semibold,
                       padding: '3px 6px',
-                      borderRadius: 4,
+                      borderRadius: borderRadius.default,
                     }}>
                       -{product.discount}%
                     </span>
@@ -823,10 +835,11 @@ export function HomePage() {
                     {product.name}
                   </p>
                   <p style={{
-                    fontSize: 15,
-                    fontWeight: 700,
-                    color: product.discount ? '#ff4757' : '#333',
+                    fontSize: typography.fontSize.base,
+                    fontWeight: typography.fontWeight.bold,
+                    color: product.discount ? colors.sale : colors.text,
                     margin: '6px 0 0',
+                    fontFamily: typography.fontFamily.mono,
                   }}>
                     ₩{formatKRW(product.salePrice || product.price)}
                   </p>
@@ -855,7 +868,7 @@ export function HomePage() {
                 fontWeight: 300,
                 color: '#000',
                 margin: 0,
-                fontFamily: theme.fonts.primary,
+                fontFamily: typography.fontFamily.heading,
                 letterSpacing: -0.5,
               }}>
                 <span style={{ fontWeight: 600 }}>Flash</span> Deals
@@ -867,16 +880,16 @@ export function HomePage() {
             </div>
             <button style={{
               background: 'none',
-              border: '1px solid #000',
-              color: '#000',
-              fontSize: 12,
-              fontWeight: 500,
+              border: `1px solid ${colors.primary}`,
+              color: colors.primary,
+              fontSize: typography.fontSize.xs,
+              fontWeight: typography.fontWeight.medium,
               cursor: 'pointer',
               padding: '8px 16px',
-              textTransform: 'uppercase',
-              letterSpacing: 0.5,
+              borderRadius: borderRadius.default,
+              transition: transitions.hover,
             }}>
-              View All
+              View all
             </button>
           </div>
 
@@ -918,7 +931,7 @@ export function HomePage() {
               fontWeight: 300,
               color: '#000',
               margin: 0,
-              fontFamily: theme.fonts.primary,
+              fontFamily: typography.fontFamily.heading,
               letterSpacing: -0.5,
             }}>
               <span style={{ fontWeight: 600 }}>Shop by</span> Origin
@@ -933,17 +946,16 @@ export function HomePage() {
                   key={f}
                   onClick={() => setActiveFilter(f)}
                   style={{
-                    background: activeFilter === f ? '#000' : '#fff',
-                    color: activeFilter === f ? '#fff' : '#000',
-                    border: '1px solid #000',
+                    background: activeFilter === f ? colors.primary : colors.white,
+                    color: activeFilter === f ? colors.white : colors.text,
+                    border: `1px solid ${activeFilter === f ? colors.primary : colors.border}`,
                     padding: isDesktop ? '8px 16px' : '6px 12px',
-                    fontSize: isDesktop ? 12 : 11,
-                    fontWeight: 400,
+                    fontSize: isDesktop ? typography.fontSize.xs : 11,
+                    fontWeight: typography.fontWeight.medium,
                     cursor: 'pointer',
                     whiteSpace: 'nowrap',
-                    transition: 'all 0.2s ease',
-                    textTransform: 'uppercase',
-                    letterSpacing: 0.5,
+                    transition: transitions.hover,
+                    borderRadius: borderRadius.default,
                   }}
                 >
                   {f}
@@ -971,11 +983,11 @@ export function HomePage() {
           <button style={{
             width: isDesktop ? 'auto' : '100%',
             padding: '14px 32px',
-            background: '#000',
+            background: colors.primary,
             border: 'none',
-            fontSize: 12,
-            fontWeight: 500,
-            color: '#fff',
+            fontSize: typography.fontSize.sm,
+            fontWeight: typography.fontWeight.semibold,
+            color: colors.white,
             cursor: 'pointer',
             marginTop: 24,
             display: 'flex',
@@ -983,10 +995,10 @@ export function HomePage() {
             justifyContent: 'center',
             gap: 6,
             margin: isDesktop ? '24px auto 0' : '20px 0 0',
-            textTransform: 'uppercase',
-            letterSpacing: 1,
+            borderRadius: borderRadius.default,
+            transition: transitions.hover,
           }}>
-            View All Products
+            View all products
           </button>
         </div>
       </main>
@@ -1039,13 +1051,13 @@ export function HomePage() {
                 position: 'absolute',
                 top: 0,
                 right: 8,
-                background: '#ff4757',
-                color: '#fff',
+                background: colors.primary,
+                color: colors.white,
                 fontSize: 10,
-                fontWeight: 600,
+                fontWeight: typography.fontWeight.semibold,
                 minWidth: 18,
                 height: 18,
-                borderRadius: 9,
+                borderRadius: borderRadius.circle,
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
@@ -1056,8 +1068,8 @@ export function HomePage() {
             )}
             <span style={{
               fontSize: 10,
-              color: tab.active ? '#667eea' : '#999',
-              fontWeight: tab.active ? 600 : 400,
+              color: tab.active ? colors.primary : colors.textMuted,
+              fontWeight: tab.active ? typography.fontWeight.semibold : typography.fontWeight.regular,
             }}>
               {tab.label}
             </span>

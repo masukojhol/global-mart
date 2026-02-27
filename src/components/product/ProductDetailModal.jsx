@@ -1,11 +1,19 @@
+/**
+ * PRODUCT DETAIL MODAL COMPONENT
+ * ==============================
+ * Product detail page using GoFresh design tokens.
+ */
+
 import { useState } from 'react';
 import { Modal } from '../common/Modal';
 import { useCart } from '../../contexts/CartContext';
 import { useAuth } from '../../contexts/AuthContext';
-import { theme } from '../../styles/theme';
+import { tokens } from '../../styles/tokens';
 import { formatKRW, toUSD } from '../../utils/helpers';
 import { useWindowSize } from '../../hooks/useWindowSize';
 import { PRODUCTS, FLASH_DEALS } from '../../data/products';
+
+const { colors, typography, borderRadius, spacing, transitions } = tokens;
 
 // Generate fake reviews for demo
 const generateReviews = (productId, rating) => {
@@ -73,7 +81,7 @@ function StarRating({ rating, size = 14, showCount = false, count = 0 }) {
             key={star}
             style={{
               fontSize: size,
-              color: star <= rating ? '#ffc107' : '#e0e0e0',
+              color: star <= rating ? colors.star : colors.border,
             }}
           >
             ★
@@ -82,8 +90,8 @@ function StarRating({ rating, size = 14, showCount = false, count = 0 }) {
       </div>
       {showCount && (
         <span style={{
-          fontSize: 13,
-          color: '#666',
+          fontSize: typography.fontSize.sm,
+          color: colors.textSecondary,
           marginLeft: 4,
         }}>
           ({count.toLocaleString()})
@@ -99,20 +107,20 @@ function ReviewItem({ review }) {
 
   return (
     <div style={{
-      padding: '16px 0',
-      borderBottom: '1px solid #f0f0f0',
+      padding: `${spacing[4]}px 0`,
+      borderBottom: `1px solid ${colors.border}`,
     }}>
       <div style={{
         display: 'flex',
         alignItems: 'center',
-        gap: 10,
-        marginBottom: 10,
+        gap: spacing[3],
+        marginBottom: spacing[3],
       }}>
         <div style={{
           width: 36,
           height: 36,
-          borderRadius: '50%',
-          background: '#f5f5f5',
+          borderRadius: borderRadius.circle,
+          background: colors.backgroundSoft,
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
@@ -121,10 +129,10 @@ function ReviewItem({ review }) {
           {review.avatar}
         </div>
         <div style={{ flex: 1 }}>
-          <p style={{ fontSize: 13, fontWeight: 500, margin: 0 }}>
+          <p style={{ fontSize: typography.fontSize.sm, fontWeight: typography.fontWeight.medium, margin: 0, color: colors.text }}>
             {review.name}
           </p>
-          <p style={{ fontSize: 11, color: '#999', margin: '2px 0 0' }}>
+          <p style={{ fontSize: typography.fontSize.xs, color: colors.textMuted, margin: '2px 0 0' }}>
             {review.country} · {review.date}
           </p>
         </div>
@@ -132,16 +140,16 @@ function ReviewItem({ review }) {
       </div>
 
       <p style={{
-        fontSize: 14,
-        color: '#333',
-        lineHeight: 1.6,
-        margin: '0 0 10px',
+        fontSize: typography.fontSize.base,
+        color: colors.text,
+        lineHeight: typography.lineHeight.relaxed,
+        margin: `0 0 ${spacing[3]}px`,
       }}>
         {review.comment}
       </p>
 
       {review.images?.length > 0 && (
-        <div style={{ display: 'flex', gap: 8, marginBottom: 10 }}>
+        <div style={{ display: 'flex', gap: spacing[2], marginBottom: spacing[3] }}>
           {review.images.map((img, idx) => (
             <img
               key={idx}
@@ -151,8 +159,8 @@ function ReviewItem({ review }) {
                 width: 70,
                 height: 70,
                 objectFit: 'cover',
-                borderRadius: 6,
-                border: '1px solid #eee',
+                borderRadius: borderRadius.default,
+                border: `1px solid ${colors.border}`,
               }}
             />
           ))}
@@ -162,16 +170,17 @@ function ReviewItem({ review }) {
       <button
         onClick={() => setHelpful(!helpful)}
         style={{
-          background: helpful ? '#f0f7ff' : '#fff',
-          border: `1px solid ${helpful ? '#346aff' : '#ddd'}`,
-          padding: '6px 12px',
-          fontSize: 12,
-          color: helpful ? '#346aff' : '#666',
+          background: helpful ? `${colors.primary}10` : colors.white,
+          border: `1px solid ${helpful ? colors.primary : colors.border}`,
+          padding: `${spacing[2]}px ${spacing[3]}px`,
+          fontSize: typography.fontSize.xs,
+          color: helpful ? colors.primary : colors.textSecondary,
           cursor: 'pointer',
-          borderRadius: 4,
+          borderRadius: borderRadius.default,
           display: 'flex',
           alignItems: 'center',
-          gap: 4,
+          gap: spacing[1],
+          transition: transitions.hover,
         }}
       >
         👍 Helpful ({review.helpful + (helpful ? 1 : 0)})
@@ -180,7 +189,7 @@ function ReviewItem({ review }) {
   );
 }
 
-// Similar Products Component (Coupang-style horizontal scroll)
+// Similar Products Component (horizontal scroll)
 function SimilarProducts({ currentProduct, onProductClick, addItem }) {
   const allProducts = [...PRODUCTS, ...FLASH_DEALS];
   const similarProducts = allProducts
@@ -203,21 +212,22 @@ function SimilarProducts({ currentProduct, onProductClick, addItem }) {
   };
 
   return (
-    <div style={{ marginTop: 24 }}>
+    <div style={{ marginTop: spacing[6] }}>
       <h3 style={{
-        fontSize: 16,
-        fontWeight: 600,
-        margin: '0 0 14px',
-        color: '#333',
+        fontSize: typography.fontSize.lg,
+        fontWeight: typography.fontWeight.semibold,
+        margin: `0 0 ${spacing[4]}px`,
+        color: colors.text,
+        fontFamily: typography.fontFamily.heading,
       }}>
-        Similar Products
+        Similar products
       </h3>
 
       <div style={{
         display: 'flex',
-        gap: 10,
+        gap: spacing[3],
         overflowX: 'auto',
-        paddingBottom: 10,
+        paddingBottom: spacing[3],
         scrollSnapType: 'x mandatory',
         WebkitOverflowScrolling: 'touch',
       }}>
@@ -230,9 +240,9 @@ function SimilarProducts({ currentProduct, onProductClick, addItem }) {
               style={{
                 minWidth: 130,
                 maxWidth: 130,
-                background: '#fff',
-                border: '1px solid #eee',
-                borderRadius: 8,
+                background: colors.white,
+                border: `1px solid ${colors.border}`,
+                borderRadius: borderRadius.default,
                 overflow: 'hidden',
                 cursor: 'pointer',
                 scrollSnapAlign: 'start',
@@ -240,7 +250,7 @@ function SimilarProducts({ currentProduct, onProductClick, addItem }) {
             >
               <div style={{
                 aspectRatio: '1/1',
-                background: '#f8f8f8',
+                background: colors.backgroundSoft,
                 position: 'relative',
               }}>
                 <img
@@ -257,23 +267,23 @@ function SimilarProducts({ currentProduct, onProductClick, addItem }) {
                     position: 'absolute',
                     top: 6,
                     left: 6,
-                    background: '#ff4757',
-                    color: '#fff',
+                    background: colors.sale,
+                    color: colors.white,
                     fontSize: 10,
-                    fontWeight: 600,
+                    fontWeight: typography.fontWeight.semibold,
                     padding: '2px 5px',
-                    borderRadius: 3,
+                    borderRadius: borderRadius.default,
                   }}>
                     -{product.discount}%
                   </span>
                 )}
               </div>
-              <div style={{ padding: 8 }}>
+              <div style={{ padding: spacing[2] }}>
                 <p style={{
-                  fontSize: 11,
-                  color: '#333',
+                  fontSize: typography.fontSize.xs,
+                  color: colors.text,
                   margin: 0,
-                  lineHeight: 1.3,
+                  lineHeight: typography.lineHeight.tight,
                   height: 28,
                   overflow: 'hidden',
                   display: '-webkit-box',
@@ -283,10 +293,11 @@ function SimilarProducts({ currentProduct, onProductClick, addItem }) {
                   {product.name}
                 </p>
                 <p style={{
-                  fontSize: 13,
-                  fontWeight: 700,
-                  color: product.discount ? '#ff4757' : '#333',
-                  margin: '6px 0 0',
+                  fontSize: typography.fontSize.sm,
+                  fontWeight: typography.fontWeight.bold,
+                  fontFamily: typography.fontFamily.mono,
+                  color: product.discount ? colors.sale : colors.text,
+                  margin: `${spacing[2]}px 0 0`,
                 }}>
                   ₩{formatKRW(price)}
                 </p>
@@ -458,31 +469,31 @@ export function ProductDetailModal({ isOpen, onClose, product, onProductClick })
                   left: 12,
                   display: 'flex',
                   flexDirection: 'column',
-                  gap: 6,
+                  gap: spacing[2],
                 }}>
                   {product.discount && (
                     <span style={{
-                      background: '#ff4757',
-                      color: '#fff',
-                      padding: '4px 8px',
-                      fontSize: 12,
-                      fontWeight: 700,
-                      borderRadius: 4,
+                      background: colors.sale,
+                      color: colors.white,
+                      padding: `${spacing[1]}px ${spacing[2]}px`,
+                      fontSize: typography.fontSize.xs,
+                      fontWeight: typography.fontWeight.bold,
+                      borderRadius: borderRadius.default,
                     }}>
                       {product.discount}% OFF
                     </span>
                   )}
                   {product.rocket && (
                     <span style={{
-                      background: '#346aff',
-                      color: '#fff',
-                      padding: '4px 8px',
-                      fontSize: 11,
-                      fontWeight: 600,
-                      borderRadius: 4,
+                      background: colors.primary,
+                      color: colors.white,
+                      padding: `${spacing[1]}px ${spacing[2]}px`,
+                      fontSize: typography.fontSize.xs,
+                      fontWeight: typography.fontWeight.semibold,
+                      borderRadius: borderRadius.default,
                       display: 'flex',
                       alignItems: 'center',
-                      gap: 4,
+                      gap: spacing[1],
                     }}>
                       🚀 Rocket
                     </span>
@@ -550,21 +561,22 @@ export function ProductDetailModal({ isOpen, onClose, product, onProductClick })
           <div style={{ flex: 1 }}>
             {/* Seller / Origin */}
             <p style={{
-              fontSize: 13,
-              color: '#346aff',
-              margin: '0 0 8px',
-              fontWeight: 500,
+              fontSize: typography.fontSize.sm,
+              color: colors.primary,
+              margin: `0 0 ${spacing[2]}px`,
+              fontWeight: typography.fontWeight.medium,
             }}>
               {product.flag} {product.origin} Store
             </p>
 
             {/* Product Title */}
             <h1 style={{
-              fontSize: isMobile ? 18 : 22,
-              fontWeight: 400,
-              margin: '0 0 12px',
-              lineHeight: 1.4,
-              color: '#111',
+              fontSize: isMobile ? typography.fontSize.lg : typography.fontSize.xl,
+              fontWeight: typography.fontWeight.regular,
+              margin: `0 0 ${spacing[3]}px`,
+              lineHeight: typography.lineHeight.normal,
+              color: colors.text,
+              fontFamily: typography.fontFamily.heading,
             }}>
               {product.name}
             </h1>
@@ -573,45 +585,46 @@ export function ProductDetailModal({ isOpen, onClose, product, onProductClick })
             <div style={{
               display: 'flex',
               alignItems: 'center',
-              gap: 8,
-              marginBottom: 16,
+              gap: spacing[2],
+              marginBottom: spacing[4],
             }}>
               <StarRating rating={product.rating} size={16} />
-              <span style={{ fontSize: 14, color: '#346aff', cursor: 'pointer' }}>
+              <span style={{ fontSize: typography.fontSize.base, color: colors.primary, cursor: 'pointer' }}>
                 {reviewCount.toLocaleString()} reviews
               </span>
-              <span style={{ fontSize: 13, color: '#999' }}>|</span>
-              <span style={{ fontSize: 13, color: '#999' }}>
+              <span style={{ fontSize: typography.fontSize.sm, color: colors.textMuted }}>|</span>
+              <span style={{ fontSize: typography.fontSize.sm, color: colors.textMuted }}>
                 {(500 + product.id * 17).toLocaleString()}+ sold
               </span>
             </div>
 
             {/* Price Section */}
             <div style={{
-              background: '#fafafa',
-              padding: 16,
-              borderRadius: 8,
-              marginBottom: 16,
+              background: colors.backgroundSoft,
+              padding: spacing[4],
+              borderRadius: borderRadius.default,
+              marginBottom: spacing[4],
             }}>
               {product.discount && (
                 <div style={{
                   display: 'flex',
                   alignItems: 'center',
-                  gap: 8,
-                  marginBottom: 6,
+                  gap: spacing[2],
+                  marginBottom: spacing[2],
                 }}>
                   <span style={{
                     fontSize: 28,
-                    fontWeight: 700,
-                    color: '#ff4757',
+                    fontWeight: typography.fontWeight.bold,
+                    color: colors.sale,
                   }}>
                     {product.discount}%
                   </span>
                   {originalPrice && (
                     <span style={{
-                      fontSize: 16,
-                      color: '#999',
+                      fontSize: typography.fontSize.lg,
+                      color: colors.textMuted,
                       textDecoration: 'line-through',
+                      fontFamily: typography.fontFamily.mono,
                     }}>
                       ₩{formatKRW(originalPrice)}
                     </span>
@@ -621,18 +634,19 @@ export function ProductDetailModal({ isOpen, onClose, product, onProductClick })
               <div style={{
                 display: 'flex',
                 alignItems: 'baseline',
-                gap: 8,
+                gap: spacing[2],
               }}>
                 <span style={{
                   fontSize: 32,
-                  fontWeight: 700,
-                  color: '#111',
+                  fontWeight: typography.fontWeight.bold,
+                  color: colors.text,
+                  fontFamily: typography.fontFamily.mono,
                 }}>
                   ₩{formatKRW(discountedPrice)}
                 </span>
                 <span style={{
-                  fontSize: 14,
-                  color: '#666',
+                  fontSize: typography.fontSize.base,
+                  color: colors.textSecondary,
                 }}>
                   ≈ ${toUSD(discountedPrice)}
                 </span>
@@ -733,17 +747,18 @@ export function ProductDetailModal({ isOpen, onClose, product, onProductClick })
                 style={{
                   flex: 1,
                   height: 48,
-                  background: '#fff',
-                  border: '2px solid #346aff',
-                  borderRadius: 4,
-                  fontSize: 15,
-                  fontWeight: 600,
-                  color: '#346aff',
+                  background: colors.white,
+                  border: `2px solid ${colors.primary}`,
+                  borderRadius: borderRadius.default,
+                  fontSize: typography.fontSize.base,
+                  fontWeight: typography.fontWeight.semibold,
+                  color: colors.primary,
                   cursor: 'pointer',
-                  transition: 'all 0.2s',
+                  transition: transitions.hover,
+                  fontFamily: typography.fontFamily.body,
                 }}
               >
-                Put in a shopping cart
+                Add to cart
               </button>
 
               {/* Buy Now */}
@@ -752,21 +767,22 @@ export function ProductDetailModal({ isOpen, onClose, product, onProductClick })
                 style={{
                   flex: 1,
                   height: 48,
-                  background: '#346aff',
+                  background: colors.primary,
                   border: 'none',
-                  borderRadius: 4,
-                  fontSize: 15,
-                  fontWeight: 600,
-                  color: '#fff',
+                  borderRadius: borderRadius.default,
+                  fontSize: typography.fontSize.base,
+                  fontWeight: typography.fontWeight.semibold,
+                  color: colors.white,
                   cursor: 'pointer',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  gap: 6,
-                  transition: 'all 0.2s',
+                  gap: spacing[2],
+                  transition: transitions.hover,
+                  fontFamily: typography.fontFamily.body,
                 }}
               >
-                Buy Now
+                Buy now
                 <span style={{ fontSize: 18 }}>›</span>
               </button>
             </div>

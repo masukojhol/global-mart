@@ -1,9 +1,17 @@
+/**
+ * AUTH MODAL COMPONENT
+ * ====================
+ * Authentication modal using GoFresh design tokens.
+ */
+
 import { useState, useEffect, useRef } from 'react';
 import { Modal } from '../common/Modal';
 import { Input, Select } from '../common/Input';
 import { Button } from '../common/Button';
 import { useAuth } from '../../contexts/AuthContext';
-import { theme } from '../../styles/theme';
+import { tokens } from '../../styles/tokens';
+
+const { colors, typography, borderRadius, spacing, transitions } = tokens;
 
 const COUNTRIES = [
   { value: 'nepal', label: '🇳🇵 Nepal', code: '+977' },
@@ -201,31 +209,32 @@ export function AuthModal({ isOpen, onClose }) {
 
   const renderStep1 = () => (
     <>
-      <div style={{ textAlign: 'center', marginBottom: 24 }}>
+      <div style={{ textAlign: 'center', marginBottom: spacing[6] }}>
         <div style={{
           width: 64,
           height: 64,
-          background: theme.colors.surfaceLight,
-          borderRadius: '50%',
+          background: colors.backgroundSoft,
+          borderRadius: borderRadius.circle,
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          margin: '0 auto 16px',
+          margin: `0 auto ${spacing[4]}px`,
           fontSize: 28,
         }}>
           📱
         </div>
         <h3 style={{
-          fontSize: 18,
-          fontWeight: 500,
-          margin: '0 0 8px',
-          fontFamily: theme.fonts.primary,
+          fontSize: typography.fontSize.lg,
+          fontWeight: typography.fontWeight.medium,
+          margin: `0 0 ${spacing[2]}px`,
+          fontFamily: typography.fontFamily.heading,
+          color: colors.text,
         }}>
-          Enter Your Mobile Number
+          Enter your mobile number
         </h3>
         <p style={{
-          fontSize: 13,
-          color: theme.colors.textSecondary,
+          fontSize: typography.fontSize.sm,
+          color: colors.textSecondary,
           margin: 0,
         }}>
           We'll send you a verification code
@@ -239,29 +248,30 @@ export function AuthModal({ isOpen, onClose }) {
         options={COUNTRIES.map(c => ({ value: c.value, label: `${c.label} (${c.code})` }))}
       />
 
-      <div style={{ marginBottom: 16 }}>
+      <div style={{ marginBottom: spacing[4] }}>
         <label style={{
           display: 'block',
-          fontSize: 12,
-          fontWeight: 500,
-          color: theme.colors.textSecondary,
-          marginBottom: 6,
-          fontFamily: theme.fonts.primary,
+          fontSize: typography.fontSize.xs,
+          fontWeight: typography.fontWeight.medium,
+          color: colors.textSecondary,
+          marginBottom: spacing[2],
+          fontFamily: typography.fontFamily.body,
           textTransform: 'uppercase',
-          letterSpacing: 0.5,
+          letterSpacing: typography.letterSpacing.wide,
         }}>
-          Phone Number <span style={{ color: theme.colors.uiSale }}>*</span>
+          Phone Number <span style={{ color: colors.sale }}>*</span>
         </label>
-        <div style={{ display: 'flex', gap: 8 }}>
+        <div style={{ display: 'flex', gap: spacing[2] }}>
           <div style={{
-            padding: '12px 14px',
-            fontSize: 14,
-            fontFamily: theme.fonts.body,
-            border: `1.5px solid ${theme.colors.borderMedium}`,
-            background: theme.colors.surfaceLight,
-            color: theme.colors.textSecondary,
+            padding: `${spacing[3]}px ${spacing[4]}px`,
+            fontSize: typography.fontSize.base,
+            fontFamily: typography.fontFamily.body,
+            border: `1.5px solid ${colors.border}`,
+            background: colors.backgroundSoft,
+            color: colors.textSecondary,
             minWidth: 70,
             textAlign: 'center',
+            borderRadius: borderRadius.default,
           }}>
             {getCountryCode()}
           </div>
@@ -276,11 +286,11 @@ export function AuthModal({ isOpen, onClose }) {
             placeholder="10-1234-5678"
             style={{
               flex: 1,
-              padding: '12px 14px',
-              fontSize: 14,
-              fontFamily: theme.fonts.body,
-              border: `1.5px solid ${error ? theme.colors.uiError : theme.colors.borderMedium}`,
-              borderRadius: 0,
+              padding: `${spacing[3]}px ${spacing[4]}px`,
+              fontSize: typography.fontSize.base,
+              fontFamily: typography.fontFamily.body,
+              border: `1.5px solid ${error ? colors.error : colors.border}`,
+              borderRadius: borderRadius.default,
               outline: 'none',
             }}
           />
@@ -289,9 +299,9 @@ export function AuthModal({ isOpen, onClose }) {
 
       {error && (
         <p style={{
-          fontSize: 12,
-          color: theme.colors.uiError,
-          margin: '-8px 0 16px',
+          fontSize: typography.fontSize.xs,
+          color: colors.error,
+          margin: `-${spacing[2]}px 0 ${spacing[4]}px`,
         }}>
           {error}
         </p>
@@ -302,10 +312,10 @@ export function AuthModal({ isOpen, onClose }) {
       </Button>
 
       <p style={{
-        fontSize: 11,
-        color: theme.colors.textMuted,
+        fontSize: typography.fontSize.xs,
+        color: colors.textMuted,
         textAlign: 'center',
-        marginTop: 16,
+        marginTop: spacing[4],
         marginBottom: 0,
       }}>
         By continuing, you agree to our Terms of Service and Privacy Policy
@@ -315,31 +325,32 @@ export function AuthModal({ isOpen, onClose }) {
 
   const renderStep2 = () => (
     <>
-      <div style={{ textAlign: 'center', marginBottom: 24 }}>
+      <div style={{ textAlign: 'center', marginBottom: spacing[6] }}>
         <div style={{
           width: 64,
           height: 64,
-          background: theme.colors.surfaceLight,
-          borderRadius: '50%',
+          background: colors.backgroundSoft,
+          borderRadius: borderRadius.circle,
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          margin: '0 auto 16px',
+          margin: `0 auto ${spacing[4]}px`,
           fontSize: 28,
         }}>
           🔐
         </div>
         <h3 style={{
-          fontSize: 18,
-          fontWeight: 500,
-          margin: '0 0 8px',
-          fontFamily: theme.fonts.primary,
+          fontSize: typography.fontSize.lg,
+          fontWeight: typography.fontWeight.medium,
+          margin: `0 0 ${spacing[2]}px`,
+          fontFamily: typography.fontFamily.heading,
+          color: colors.text,
         }}>
-          Enter Verification Code
+          Enter verification code
         </h3>
         <p style={{
-          fontSize: 13,
-          color: theme.colors.textSecondary,
+          fontSize: typography.fontSize.sm,
+          color: colors.textSecondary,
           margin: 0,
         }}>
           We sent a 6-digit code to<br />
@@ -351,8 +362,8 @@ export function AuthModal({ isOpen, onClose }) {
       <div style={{
         display: 'flex',
         justifyContent: 'center',
-        gap: 8,
-        marginBottom: 20,
+        gap: spacing[2],
+        marginBottom: spacing[5],
       }}>
         {otp.map((digit, index) => (
           <input
@@ -369,13 +380,13 @@ export function AuthModal({ isOpen, onClose }) {
               width: 44,
               height: 52,
               textAlign: 'center',
-              fontSize: 20,
-              fontWeight: 600,
-              fontFamily: theme.fonts.mono,
-              border: `2px solid ${digit ? theme.colors.brandBlue : theme.colors.borderMedium}`,
-              borderRadius: 0,
+              fontSize: typography.fontSize.xl,
+              fontWeight: typography.fontWeight.semibold,
+              fontFamily: typography.fontFamily.mono,
+              border: `2px solid ${digit ? colors.primary : colors.border}`,
+              borderRadius: borderRadius.default,
               outline: 'none',
-              transition: 'border-color 0.2s',
+              transition: transitions.hover,
             }}
           />
         ))}
@@ -383,10 +394,10 @@ export function AuthModal({ isOpen, onClose }) {
 
       {error && (
         <p style={{
-          fontSize: 12,
-          color: theme.colors.uiError,
+          fontSize: typography.fontSize.xs,
+          color: colors.error,
           textAlign: 'center',
-          marginBottom: 16,
+          marginBottom: spacing[4],
         }}>
           {error}
         </p>
@@ -399,12 +410,12 @@ export function AuthModal({ isOpen, onClose }) {
       {/* Resend */}
       <div style={{
         textAlign: 'center',
-        marginTop: 20,
+        marginTop: spacing[5],
       }}>
         {countdown > 0 ? (
           <p style={{
-            fontSize: 13,
-            color: theme.colors.textMuted,
+            fontSize: typography.fontSize.sm,
+            color: colors.textMuted,
             margin: 0,
           }}>
             Resend code in <strong>{countdown}s</strong>
@@ -416,9 +427,9 @@ export function AuthModal({ isOpen, onClose }) {
             style={{
               background: 'none',
               border: 'none',
-              color: theme.colors.brandBlue,
-              fontSize: 13,
-              fontWeight: 600,
+              color: colors.primary,
+              fontSize: typography.fontSize.sm,
+              fontWeight: typography.fontWeight.semibold,
               cursor: 'pointer',
               padding: 0,
             }}
@@ -438,11 +449,11 @@ export function AuthModal({ isOpen, onClose }) {
         style={{
           display: 'block',
           width: '100%',
-          marginTop: 12,
+          marginTop: spacing[3],
           background: 'none',
           border: 'none',
-          fontSize: 12,
-          color: theme.colors.textSecondary,
+          fontSize: typography.fontSize.xs,
+          color: colors.textSecondary,
           cursor: 'pointer',
           textDecoration: 'underline',
         }}
@@ -452,13 +463,14 @@ export function AuthModal({ isOpen, onClose }) {
 
       {/* Demo hint */}
       <div style={{
-        marginTop: 20,
-        padding: 12,
-        background: '#FFF9E6',
-        border: `1px solid ${theme.colors.uiWarning}`,
-        fontSize: 11,
-        color: theme.colors.textSecondary,
+        marginTop: spacing[5],
+        padding: spacing[3],
+        background: colors.warningLight,
+        border: `1px solid ${colors.warning}`,
+        fontSize: typography.fontSize.xs,
+        color: colors.textSecondary,
         textAlign: 'center',
+        borderRadius: borderRadius.default,
       }}>
         <strong>Demo:</strong> Enter any 6 digits to continue
       </div>
@@ -467,31 +479,32 @@ export function AuthModal({ isOpen, onClose }) {
 
   const renderStep3 = () => (
     <>
-      <div style={{ textAlign: 'center', marginBottom: 24 }}>
+      <div style={{ textAlign: 'center', marginBottom: spacing[6] }}>
         <div style={{
           width: 64,
           height: 64,
-          background: '#E8F5E9',
-          borderRadius: '50%',
+          background: colors.successLight,
+          borderRadius: borderRadius.circle,
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          margin: '0 auto 16px',
+          margin: `0 auto ${spacing[4]}px`,
           fontSize: 28,
         }}>
           ✓
         </div>
         <h3 style={{
-          fontSize: 18,
-          fontWeight: 500,
-          margin: '0 0 8px',
-          fontFamily: theme.fonts.primary,
+          fontSize: typography.fontSize.lg,
+          fontWeight: typography.fontWeight.medium,
+          margin: `0 0 ${spacing[2]}px`,
+          fontFamily: typography.fontFamily.heading,
+          color: colors.text,
         }}>
-          Almost Done!
+          Almost done!
         </h3>
         <p style={{
-          fontSize: 13,
-          color: theme.colors.textSecondary,
+          fontSize: typography.fontSize.sm,
+          color: colors.textSecondary,
           margin: 0,
         }}>
           Just a few more details to complete your account
@@ -510,36 +523,38 @@ export function AuthModal({ isOpen, onClose }) {
       />
 
       <div style={{
-        padding: 14,
-        background: theme.colors.surfaceLight,
-        marginBottom: 16,
+        padding: spacing[4],
+        background: colors.backgroundSoft,
+        marginBottom: spacing[4],
         display: 'flex',
         alignItems: 'center',
-        gap: 12,
+        gap: spacing[3],
+        borderRadius: borderRadius.default,
       }}>
         <span style={{ fontSize: 20 }}>📱</span>
         <div>
           <p style={{
-            fontSize: 11,
-            color: theme.colors.textMuted,
+            fontSize: typography.fontSize.xs,
+            color: colors.textMuted,
             margin: '0 0 2px',
             textTransform: 'uppercase',
-            letterSpacing: 0.5,
+            letterSpacing: typography.letterSpacing.wide,
           }}>
             Verified Phone
           </p>
           <p style={{
-            fontSize: 14,
-            fontWeight: 500,
+            fontSize: typography.fontSize.base,
+            fontWeight: typography.fontWeight.medium,
             margin: 0,
-            fontFamily: theme.fonts.mono,
+            fontFamily: typography.fontFamily.mono,
+            color: colors.text,
           }}>
             {getCountryCode()} {phone}
           </p>
         </div>
         <span style={{
           marginLeft: 'auto',
-          color: theme.colors.uiSuccess,
+          color: colors.success,
           fontSize: 18,
         }}>
           ✓
@@ -548,16 +563,16 @@ export function AuthModal({ isOpen, onClose }) {
 
       {error && (
         <p style={{
-          fontSize: 12,
-          color: theme.colors.uiError,
-          marginBottom: 16,
+          fontSize: typography.fontSize.xs,
+          color: colors.error,
+          marginBottom: spacing[4],
         }}>
           {error}
         </p>
       )}
 
       <Button fullWidth loading={loading} onClick={handleCompleteSignup}>
-        Complete Signup
+        Complete signup
       </Button>
     </>
   );

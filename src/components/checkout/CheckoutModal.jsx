@@ -1,3 +1,9 @@
+/**
+ * CHECKOUT MODAL COMPONENT
+ * ========================
+ * Multi-step checkout using GoFresh design tokens.
+ */
+
 import { useState } from 'react';
 import { Modal } from '../common/Modal';
 import { Input, Select } from '../common/Input';
@@ -5,9 +11,11 @@ import { Button } from '../common/Button';
 import { useCart } from '../../contexts/CartContext';
 import { useAuth } from '../../contexts/AuthContext';
 import { useOrders } from '../../contexts/OrderContext';
-import { theme } from '../../styles/theme';
+import { tokens } from '../../styles/tokens';
 import { formatKRW, toUSD } from '../../utils/helpers';
 import { useWindowSize } from '../../hooks/useWindowSize';
+
+const { colors, typography, borderRadius, spacing, transitions } = tokens;
 
 const PAYMENT_METHODS = [
   { value: 'card', label: '💳 Credit/Debit Card' },
@@ -122,19 +130,19 @@ export function CheckoutModal({ isOpen, onClose, onSuccess }) {
   const renderStep1 = () => (
     <>
       <h3 style={{
-        fontSize: 14,
-        fontWeight: 600,
+        fontSize: typography.fontSize.base,
+        fontWeight: typography.fontWeight.semibold,
         marginTop: 0,
-        marginBottom: 20,
-        color: theme.colors.textSecondary,
-        fontFamily: theme.fonts.primary,
+        marginBottom: spacing[5],
+        color: colors.textSecondary,
+        fontFamily: typography.fontFamily.heading,
         textTransform: 'uppercase',
-        letterSpacing: 1,
+        letterSpacing: typography.letterSpacing.wide,
       }}>
-        Shipping Address
+        Shipping address
       </h3>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: spacing[3] }}>
         <Input
           label="Full Name"
           value={shippingAddress.name}
@@ -184,30 +192,32 @@ export function CheckoutModal({ isOpen, onClose, onSuccess }) {
   const renderStep2 = () => (
     <>
       <h3 style={{
-        fontSize: 14,
-        fontWeight: 600,
+        fontSize: typography.fontSize.base,
+        fontWeight: typography.fontWeight.semibold,
         marginTop: 0,
-        marginBottom: 20,
-        color: theme.colors.textSecondary,
-        fontFamily: theme.fonts.primary,
+        marginBottom: spacing[5],
+        color: colors.textSecondary,
+        fontFamily: typography.fontFamily.heading,
         textTransform: 'uppercase',
-        letterSpacing: 1,
+        letterSpacing: typography.letterSpacing.wide,
       }}>
-        Payment Method
+        Payment method
       </h3>
 
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginBottom: 24 }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: spacing[3], marginBottom: spacing[6] }}>
         {PAYMENT_METHODS.map((method) => (
           <label
             key={method.value}
             style={{
               display: 'flex',
               alignItems: 'center',
-              gap: 12,
-              padding: '14px 16px',
-              border: `2px solid ${paymentMethod === method.value ? theme.colors.brandPrimary : theme.colors.borderLight}`,
+              gap: spacing[3],
+              padding: `${spacing[4]}px ${spacing[4]}px`,
+              border: `2px solid ${paymentMethod === method.value ? colors.primary : colors.border}`,
               cursor: 'pointer',
-              background: paymentMethod === method.value ? theme.colors.surfaceLight : 'transparent',
+              background: paymentMethod === method.value ? colors.backgroundSoft : 'transparent',
+              borderRadius: borderRadius.default,
+              transition: transitions.hover,
             }}
           >
             <input
@@ -216,18 +226,19 @@ export function CheckoutModal({ isOpen, onClose, onSuccess }) {
               value={method.value}
               checked={paymentMethod === method.value}
               onChange={(e) => setPaymentMethod(e.target.value)}
-              style={{ width: 18, height: 18 }}
+              style={{ width: 18, height: 18, accentColor: colors.primary }}
             />
-            <span style={{ fontSize: 14 }}>{method.label}</span>
+            <span style={{ fontSize: typography.fontSize.base }}>{method.label}</span>
           </label>
         ))}
       </div>
 
       {paymentMethod === 'card' && (
         <div style={{
-          padding: 20,
-          background: theme.colors.surfaceLight,
-          marginTop: 8,
+          padding: spacing[5],
+          background: colors.backgroundSoft,
+          marginTop: spacing[2],
+          borderRadius: borderRadius.default,
         }}>
           <Input
             label="Card Number"
@@ -236,7 +247,7 @@ export function CheckoutModal({ isOpen, onClose, onSuccess }) {
             placeholder="1234 5678 9012 3456"
             required
           />
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: spacing[3] }}>
             <Input
               label="Expiry"
               value={cardDetails.expiry}
@@ -266,45 +277,45 @@ export function CheckoutModal({ isOpen, onClose, onSuccess }) {
   const renderStep3 = () => (
     <>
       <h3 style={{
-        fontSize: 14,
-        fontWeight: 600,
+        fontSize: typography.fontSize.base,
+        fontWeight: typography.fontWeight.semibold,
         marginTop: 0,
-        marginBottom: 20,
-        color: theme.colors.textSecondary,
-        fontFamily: theme.fonts.primary,
+        marginBottom: spacing[5],
+        color: colors.textSecondary,
+        fontFamily: typography.fontFamily.heading,
         textTransform: 'uppercase',
-        letterSpacing: 1,
+        letterSpacing: typography.letterSpacing.wide,
       }}>
-        Order Summary
+        Order summary
       </h3>
 
       {/* Items */}
       <div style={{
-        marginBottom: 20,
+        marginBottom: spacing[5],
         maxHeight: 200,
         overflowY: 'auto',
-        padding: '12px 0',
-        borderTop: `1px solid ${theme.colors.borderLight}`,
-        borderBottom: `1px solid ${theme.colors.borderLight}`,
+        padding: `${spacing[3]}px 0`,
+        borderTop: `1px solid ${colors.border}`,
+        borderBottom: `1px solid ${colors.border}`,
       }}>
         {items.map((item) => (
           <div key={item.id} style={{
             display: 'flex',
-            gap: 12,
-            marginBottom: 12,
+            gap: spacing[3],
+            marginBottom: spacing[3],
           }}>
             <img
               src={item.img}
               alt={item.name}
-              style={{ width: 50, height: 50, objectFit: 'cover' }}
+              style={{ width: 50, height: 50, objectFit: 'cover', borderRadius: borderRadius.default }}
             />
             <div style={{ flex: 1 }}>
-              <p style={{ fontSize: 12, margin: 0, fontWeight: 500 }}>{item.name}</p>
-              <p style={{ fontSize: 11, color: theme.colors.textMuted, margin: '4px 0 0' }}>
+              <p style={{ fontSize: typography.fontSize.xs, margin: 0, fontWeight: typography.fontWeight.medium, color: colors.text }}>{item.name}</p>
+              <p style={{ fontSize: typography.fontSize.xs, color: colors.textMuted, margin: `${spacing[1]}px 0 0` }}>
                 Qty: {item.quantity} × ₩{formatKRW(item.price)}
               </p>
             </div>
-            <span style={{ fontSize: 13, fontWeight: 600 }}>
+            <span style={{ fontSize: typography.fontSize.sm, fontWeight: typography.fontWeight.semibold, fontFamily: typography.fontFamily.mono }}>
               ₩{formatKRW(item.price * item.quantity)}
             </span>
           </div>
@@ -312,18 +323,18 @@ export function CheckoutModal({ isOpen, onClose, onSuccess }) {
       </div>
 
       {/* Shipping Address */}
-      <div style={{ marginBottom: 16 }}>
+      <div style={{ marginBottom: spacing[4] }}>
         <p style={{
-          fontSize: 11,
-          fontWeight: 600,
-          color: theme.colors.textMuted,
-          margin: '0 0 6px',
+          fontSize: typography.fontSize.xs,
+          fontWeight: typography.fontWeight.semibold,
+          color: colors.textMuted,
+          margin: `0 0 ${spacing[2]}px`,
           textTransform: 'uppercase',
-          letterSpacing: 0.5,
+          letterSpacing: typography.letterSpacing.wide,
         }}>
-          Shipping To
+          Shipping to
         </p>
-        <p style={{ fontSize: 13, margin: 0, lineHeight: 1.5 }}>
+        <p style={{ fontSize: typography.fontSize.sm, margin: 0, lineHeight: typography.lineHeight.relaxed, color: colors.text }}>
           {shippingAddress.name}<br />
           {shippingAddress.phone}<br />
           {shippingAddress.address} {shippingAddress.addressDetail}<br />
@@ -332,50 +343,51 @@ export function CheckoutModal({ isOpen, onClose, onSuccess }) {
       </div>
 
       {/* Payment */}
-      <div style={{ marginBottom: 20 }}>
+      <div style={{ marginBottom: spacing[5] }}>
         <p style={{
-          fontSize: 11,
-          fontWeight: 600,
-          color: theme.colors.textMuted,
-          margin: '0 0 6px',
+          fontSize: typography.fontSize.xs,
+          fontWeight: typography.fontWeight.semibold,
+          color: colors.textMuted,
+          margin: `0 0 ${spacing[2]}px`,
           textTransform: 'uppercase',
-          letterSpacing: 0.5,
+          letterSpacing: typography.letterSpacing.wide,
         }}>
           Payment
         </p>
-        <p style={{ fontSize: 13, margin: 0 }}>
+        <p style={{ fontSize: typography.fontSize.sm, margin: 0, color: colors.text }}>
           {PAYMENT_METHODS.find(m => m.value === paymentMethod)?.label}
         </p>
       </div>
 
       {/* Totals */}
       <div style={{
-        background: theme.colors.surfaceLight,
-        padding: 16,
+        background: colors.backgroundSoft,
+        padding: spacing[4],
+        borderRadius: borderRadius.default,
       }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8 }}>
-          <span style={{ fontSize: 13 }}>Subtotal</span>
-          <span style={{ fontSize: 13 }}>₩{formatKRW(subtotal)}</span>
+        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: spacing[2] }}>
+          <span style={{ fontSize: typography.fontSize.sm, color: colors.textSecondary }}>Subtotal</span>
+          <span style={{ fontSize: typography.fontSize.sm, fontFamily: typography.fontFamily.mono }}>₩{formatKRW(subtotal)}</span>
         </div>
-        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8 }}>
-          <span style={{ fontSize: 13 }}>Shipping</span>
-          <span style={{ fontSize: 13, color: shippingFee === 0 ? theme.colors.uiSuccess : 'inherit' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: spacing[2] }}>
+          <span style={{ fontSize: typography.fontSize.sm, color: colors.textSecondary }}>Shipping</span>
+          <span style={{ fontSize: typography.fontSize.sm, color: shippingFee === 0 ? colors.success : colors.text, fontFamily: typography.fontFamily.mono }}>
             {shippingFee === 0 ? 'FREE' : `₩${formatKRW(shippingFee)}`}
           </span>
         </div>
         <div style={{
           display: 'flex',
           justifyContent: 'space-between',
-          paddingTop: 12,
-          borderTop: `1px solid ${theme.colors.borderLight}`,
-          marginTop: 8,
+          paddingTop: spacing[3],
+          borderTop: `1px solid ${colors.border}`,
+          marginTop: spacing[2],
         }}>
-          <span style={{ fontSize: 16, fontWeight: 600 }}>Total</span>
+          <span style={{ fontSize: typography.fontSize.lg, fontWeight: typography.fontWeight.semibold }}>Total</span>
           <div style={{ textAlign: 'right' }}>
-            <span style={{ fontSize: 18, fontWeight: 700, fontFamily: theme.fonts.mono }}>
+            <span style={{ fontSize: 18, fontWeight: typography.fontWeight.bold, fontFamily: typography.fontFamily.mono, color: colors.primary }}>
               ₩{formatKRW(total)}
             </span>
-            <span style={{ display: 'block', fontSize: 11, color: theme.colors.textMuted }}>
+            <span style={{ display: 'block', fontSize: typography.fontSize.xs, color: colors.textMuted }}>
               ≈${toUSD(total)}
             </span>
           </div>
@@ -384,16 +396,17 @@ export function CheckoutModal({ isOpen, onClose, onSuccess }) {
 
       {hasRocketItems && (
         <div style={{
-          background: '#E3F2FD',
-          padding: '12px 14px',
-          marginTop: 16,
+          background: `${colors.primary}15`,
+          padding: `${spacing[3]}px ${spacing[4]}px`,
+          marginTop: spacing[4],
           display: 'flex',
           alignItems: 'center',
-          gap: 8,
+          gap: spacing[2],
+          borderRadius: borderRadius.default,
         }}>
           <span>🚀</span>
-          <span style={{ fontSize: 12, color: theme.colors.brandBlue }}>
-            <strong>Rocket Delivery</strong> - Your order will arrive by 7AM tomorrow!
+          <span style={{ fontSize: typography.fontSize.xs, color: colors.primary }}>
+            <strong>Rocket delivery</strong> - Your order will arrive by 7AM tomorrow!
           </span>
         </div>
       )}
@@ -410,22 +423,23 @@ export function CheckoutModal({ isOpen, onClose, onSuccess }) {
       {/* Progress */}
       <div style={{
         display: 'flex',
-        marginBottom: 24,
-        gap: 8,
+        marginBottom: spacing[6],
+        gap: spacing[2],
       }}>
         {['Shipping', 'Payment', 'Review'].map((label, i) => (
           <div key={label} style={{ flex: 1 }}>
             <div style={{
               height: 4,
-              background: i + 1 <= step ? theme.colors.brandPrimary : theme.colors.borderLight,
-              marginBottom: 6,
+              background: i + 1 <= step ? colors.primary : colors.border,
+              marginBottom: spacing[2],
+              borderRadius: borderRadius.default,
             }} />
             <span style={{
               fontSize: 10,
-              fontWeight: 600,
-              color: i + 1 <= step ? theme.colors.textPrimary : theme.colors.textMuted,
+              fontWeight: typography.fontWeight.semibold,
+              color: i + 1 <= step ? colors.text : colors.textMuted,
               textTransform: 'uppercase',
-              letterSpacing: 0.5,
+              letterSpacing: typography.letterSpacing.wide,
             }}>
               {label}
             </span>
@@ -435,12 +449,13 @@ export function CheckoutModal({ isOpen, onClose, onSuccess }) {
 
       {error && (
         <div style={{
-          background: '#FEE',
-          border: `1px solid ${theme.colors.uiError}`,
-          padding: '12px 14px',
-          marginBottom: 20,
-          fontSize: 13,
-          color: theme.colors.uiError,
+          background: colors.errorLight,
+          border: `1px solid ${colors.error}`,
+          padding: `${spacing[3]}px ${spacing[4]}px`,
+          marginBottom: spacing[5],
+          fontSize: typography.fontSize.sm,
+          color: colors.error,
+          borderRadius: borderRadius.default,
         }}>
           {error}
         </div>
@@ -453,11 +468,11 @@ export function CheckoutModal({ isOpen, onClose, onSuccess }) {
       {/* Actions */}
       <div style={{
         display: 'flex',
-        gap: 12,
-        marginTop: 24,
+        gap: spacing[3],
+        marginTop: spacing[6],
       }}>
         {step > 1 && (
-          <Button variant="secondary" onClick={handleBack} style={{ flex: 1 }}>
+          <Button variant="outline" onClick={handleBack} style={{ flex: 1 }}>
             Back
           </Button>
         )}
@@ -471,7 +486,7 @@ export function CheckoutModal({ isOpen, onClose, onSuccess }) {
             loading={loading}
             style={{ flex: 2 }}
           >
-            Place Order - ₩{formatKRW(total)}
+            Place order - ₩{formatKRW(total)}
           </Button>
         )}
       </div>
