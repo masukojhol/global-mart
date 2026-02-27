@@ -26,7 +26,9 @@ export function Modal({
   children,
   size = 'md',
   showClose = true,
+  showHeader = true,
   closeOnOverlay = true,
+  padding = true,
   footer,
   style,
   ...props
@@ -98,7 +100,7 @@ export function Modal({
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        {(title || showClose) && (
+        {showHeader && (title || showClose) && (
           <div
             style={{
               padding: isMobile ? `${spacing[4]}px ${spacing[5]}px` : `${spacing[5]}px ${spacing[6]}px`,
@@ -156,7 +158,7 @@ export function Modal({
         {/* Content */}
         <div
           style={{
-            padding: isMobile ? spacing[5] : spacing[6],
+            padding: padding ? (isMobile ? spacing[5] : spacing[6]) : 0,
             overflowY: 'auto',
             flex: 1,
           }}

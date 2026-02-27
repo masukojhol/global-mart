@@ -3,6 +3,7 @@ import { tokens } from '../styles/tokens';
 import { useWindowSize } from '../hooks/useWindowSize';
 import { useLanguage } from '../contexts/LanguageContext';
 import { LanguageSwitcher } from '../components/common/LanguageSwitcher';
+import { NotificationBell } from '../components/common/Notification';
 
 const { colors, typography, borderRadius, spacing, transitions } = tokens;
 import { FLASH_DEALS, PRODUCTS } from '../data/products';
@@ -537,6 +538,12 @@ export function HomePage() {
 
             {/* Right Actions */}
             <div style={{ display: 'flex', alignItems: 'center', gap: isDesktop ? 20 : 12 }}>
+              {/* Notifications */}
+              <NotificationBell
+                onTrackOrder={handleTrackOrder}
+                onOpenAuth={() => setShowAuthModal(true)}
+              />
+
               {/* Account */}
               <button
                 onClick={() => isAuthenticated ? setShowProfileModal(true) : setShowAuthModal(true)}

@@ -12,6 +12,7 @@ import { useLanguage } from '../../contexts/LanguageContext';
 import { CATEGORIES } from '../../data/products';
 import { CountBadge } from '../common/Badge';
 import { LanguageSwitcher } from '../common/LanguageSwitcher';
+import { NotificationBell } from '../common/Notification';
 
 const { colors, typography, borderRadius, shadows, spacing, transitions } = tokens;
 
@@ -23,6 +24,7 @@ export function Header({
   onOpenAuth,
   onOpenCart,
   onOpenTracking,
+  onTrackOrder,
 }) {
   const { isMobile } = useWindowSize();
   const { itemCount } = useCart();
@@ -79,7 +81,10 @@ export function Header({
 
             {/* Mobile Nav Actions */}
             {isMobile && (
-              <nav style={{ display: 'flex', alignItems: 'center', gap: 18 }}>
+              <nav style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+                {/* Notifications */}
+                <NotificationBell onTrackOrder={onTrackOrder} onOpenAuth={onOpenAuth} />
+
                 <button
                   onClick={onOpenTracking}
                   style={{
@@ -87,7 +92,7 @@ export function Header({
                     border: 'none',
                     cursor: 'pointer',
                     fontSize: 18,
-                    padding: 0,
+                    padding: spacing[2],
                     color: colors.text,
                   }}
                 >
@@ -103,7 +108,7 @@ export function Header({
                     border: 'none',
                     cursor: 'pointer',
                     fontSize: 18,
-                    padding: 0,
+                    padding: spacing[2],
                     position: 'relative',
                     color: colors.text,
                   }}
@@ -116,8 +121,8 @@ export function Header({
                   {itemCount > 0 && (
                     <span style={{
                       position: 'absolute',
-                      top: -6,
-                      right: -8,
+                      top: -2,
+                      right: -4,
                     }}>
                       <CountBadge count={itemCount} />
                     </span>
@@ -258,6 +263,9 @@ export function Header({
                   {t('nav.signOut')}
                 </button>
               )}
+
+              {/* Notifications */}
+              <NotificationBell onTrackOrder={onTrackOrder} onOpenAuth={onOpenAuth} />
 
               {/* Language Switcher */}
               <LanguageSwitcher variant="toggle" showLabel={false} />

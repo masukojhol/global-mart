@@ -39,6 +39,7 @@ export const ko = {
     price: '가격',
     reviews: '리뷰',
     rating: '평점',
+    pieces: '개',
   },
 
   // Navigation
@@ -357,12 +358,97 @@ export const ko = {
     dangerZone: '위험 영역',
     deleteAccount: '계정 삭제',
     deleteAccountWarning: '계정을 삭제하면 되돌릴 수 없습니다.',
+    // Coupang-style sidebar menu sections
+    myShopping: '나의 쇼핑',
+    myBenefits: '나의 혜택',
+    myActivities: '나의 활동',
+    myInformation: '나의 정보',
+    // Shopping menu items
+    orderList: '주문목록',
+    cancellations: '취소/반품',
+    receipts: '영수증/세금계산서',
+    wishlist: '찜 목록',
+    // Benefits menu items
+    points: '포인트',
+    coupons: '쿠폰',
+    cashBalance: '캐시',
+    couponsVouchers: '쿠폰 및 바우처',
+    cashPoints: '캐시/상품권',
+    // Activities menu items
+    myReviews: '내 리뷰',
+    inquiries: '문의내역',
+    recentlyViewed: '최근 본 상품',
+    contactUs: '고객센터',
+    reviewManagement: '리뷰 관리',
+    // Information menu items
+    accountInfo: '계정 정보',
+    addressBook: '배송지 관리',
+    paymentMethods: '결제 수단',
+    editProfile: '개인정보 확인/수정',
+    paymentMethod: '결제수단',
+    addressManagement: '배송지 관리',
+    // Search
+    searchOrders: '주문 검색...',
+    // Balance items
+    pointsBalance: '포인트',
+    couponCount: '쿠폰',
+  },
+
+  // Orders
+  orders: {
+    orderedOn: '주문일',
+    viewDetails: '주문 상세 보기',
+    deliveryCompleted: '배송완료',
+    shipped: '배송중',
+    processing: '상품준비중',
+    confirmed: '결제완료',
+    cancelled: '주문취소',
+    pending: '결제대기',
+    arrivesOn: '도착 예정',
+    addToCart: '장바구니 담기',
+    deliveryTracking: '배송조회',
+    exchangeReturn: '교환/반품 신청',
+    writeReview: '리뷰 작성',
   },
 
   // Languages
   languages: {
     en: 'English',
     ko: '한국어',
+  },
+
+  // Notifications
+  notifications: {
+    title: '알림',
+    empty: '알림이 없습니다',
+    markAllRead: '모두 읽음',
+    seeMore: '더보기',
+    showLess: '접기',
+    viewAll: '모든 알림 보기',
+    justNow: '방금',
+    minAgo: '분 전',
+    hourAgo: '시간 전',
+    dayAgo: '일 전',
+    // Order notifications
+    orderPlaced: '주문 완료',
+    orderConfirmed: '주문 확인',
+    orderProcessing: '상품 준비 중',
+    orderShipped: '배송 시작',
+    orderOutForDelivery: '배송 중',
+    orderDelivered: '배송 완료',
+    orderCancelled: '주문 취소',
+    // Messages
+    orderPlacedMsg: '주문이 성공적으로 완료되었습니다.',
+    orderConfirmedMsg: '주문이 확인되었으며 준비 중입니다.',
+    orderProcessingMsg: '상품을 포장하고 배송 준비 중입니다.',
+    orderShippedMsg: '주문이 발송되어 배송 중입니다!',
+    orderOutForDeliveryMsg: '주문이 배송 출발했습니다. 곧 도착합니다!',
+    orderDeliveredMsg: '주문이 배송 완료되었습니다. 감사합니다!',
+    orderCancelledMsg: '주문이 취소되었습니다.',
+    // Actions
+    trackOrder: '배송 조회',
+    shopNow: '쇼핑하기',
+    learnMore: '자세히 보기',
   },
 };
 

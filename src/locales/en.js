@@ -39,6 +39,7 @@ export const en = {
     price: 'Price',
     reviews: 'reviews',
     rating: 'Rating',
+    pieces: 'piece',
   },
 
   // Navigation
@@ -357,12 +358,97 @@ export const en = {
     dangerZone: 'Danger Zone',
     deleteAccount: 'Delete Account',
     deleteAccountWarning: 'Once you delete your account, there is no going back.',
+    // Coupang-style sidebar menu sections
+    myShopping: 'MY SHOPPING',
+    myBenefits: 'MY BENEFITS',
+    myActivities: 'MY ACTIVITIES',
+    myInformation: 'MY INFORMATION',
+    // Shopping menu items
+    orderList: 'Order list',
+    cancellations: 'Cancellations/Returns',
+    receipts: 'Receipts/Tax Invoice',
+    wishlist: 'Wishlist',
+    // Benefits menu items
+    points: 'Points',
+    coupons: 'Coupons',
+    cashBalance: 'Cash',
+    couponsVouchers: 'Coupons and vouchers',
+    cashPoints: 'Cash/Gift Card',
+    // Activities menu items
+    myReviews: 'My Reviews',
+    inquiries: 'Inquiries',
+    recentlyViewed: 'Recently Viewed',
+    contactUs: 'Contact Us',
+    reviewManagement: 'Review Management',
+    // Information menu items
+    accountInfo: 'Account Info',
+    addressBook: 'Address Book',
+    paymentMethods: 'Payment Methods',
+    editProfile: 'Confirm/edit personal info',
+    paymentMethod: 'Payment method',
+    addressManagement: 'Delivery address',
+    // Search
+    searchOrders: 'Search orders...',
+    // Balance items
+    pointsBalance: 'Points',
+    couponCount: 'Coupons',
+  },
+
+  // Orders
+  orders: {
+    orderedOn: 'Ordered on',
+    viewDetails: 'View Order Details',
+    deliveryCompleted: 'Delivery completed',
+    shipped: 'Shipped',
+    processing: 'Processing',
+    confirmed: 'Order confirmed',
+    cancelled: 'Cancelled',
+    pending: 'Pending',
+    arrivesOn: 'Arrives on',
+    addToCart: 'Put in a shopping cart',
+    deliveryTracking: 'Delivery tracking',
+    exchangeReturn: 'Exchange/Return Request',
+    writeReview: 'Write a review',
   },
 
   // Languages
   languages: {
     en: 'English',
     ko: '한국어',
+  },
+
+  // Notifications
+  notifications: {
+    title: 'Notifications',
+    empty: 'No notifications yet',
+    markAllRead: 'Mark all read',
+    seeMore: 'See more',
+    showLess: 'Show less',
+    viewAll: 'View all notifications',
+    justNow: 'Just now',
+    minAgo: 'm ago',
+    hourAgo: 'h ago',
+    dayAgo: 'd ago',
+    // Order notifications
+    orderPlaced: 'Order Placed',
+    orderConfirmed: 'Order Confirmed',
+    orderProcessing: 'Order Processing',
+    orderShipped: 'Order Shipped',
+    orderOutForDelivery: 'Out for Delivery',
+    orderDelivered: 'Order Delivered',
+    orderCancelled: 'Order Cancelled',
+    // Messages
+    orderPlacedMsg: 'Your order has been placed successfully.',
+    orderConfirmedMsg: 'Your order has been confirmed and is being prepared.',
+    orderProcessingMsg: 'Your order is being packed and prepared for shipping.',
+    orderShippedMsg: 'Your order has been shipped and is on its way!',
+    orderOutForDeliveryMsg: 'Your order is out for delivery. It will arrive soon!',
+    orderDeliveredMsg: 'Your order has been delivered. Enjoy!',
+    orderCancelledMsg: 'Your order has been cancelled.',
+    // Actions
+    trackOrder: 'Track Order',
+    shopNow: 'Shop Now',
+    learnMore: 'Learn More',
   },
 };
 
