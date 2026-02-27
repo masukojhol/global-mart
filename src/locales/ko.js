@@ -311,9 +311,12 @@ export const ko = {
   // Profile
   profile: {
     title: '내 계정',
+    profile: '프로필',
     settings: '설정',
     orderHistory: '주문 내역',
     contactInfo: '연락처 정보',
+    personalInfo: '개인 정보',
+    shippingAddress: '배송 주소',
     preferences: '환경설정',
     fullName: '이름',
     email: '이메일',
@@ -326,8 +329,12 @@ export const ko = {
     saveSuccess: '프로필이 업데이트되었습니다',
     memberSince: '가입일',
     notifications: '알림',
+    pushNotifications: '푸시 알림',
+    pushNotificationsDesc: '주문 업데이트 및 프로모션 알림 받기',
     newsletter: '뉴스레터',
+    newsletterDesc: '주간 특가 및 신상품 소식',
     language: '언어',
+    appLanguage: '앱 언어',
     enabled: '활성화됨',
     subscribed: '구독 중',
     noOrders: '주문 내역이 없습니다',
@@ -341,6 +348,15 @@ export const ko = {
     items: '개 상품',
     trackOrder: '배송 조회',
     reorder: '재주문',
+    // Security
+    security: '보안',
+    password: '비밀번호',
+    twoFactor: '2단계 인증',
+    notEnabled: '비활성화',
+    // Danger zone
+    dangerZone: '위험 영역',
+    deleteAccount: '계정 삭제',
+    deleteAccountWarning: '계정을 삭제하면 되돌릴 수 없습니다.',
   },
 
   // Languages

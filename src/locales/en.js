@@ -311,9 +311,12 @@ export const en = {
   // Profile
   profile: {
     title: 'My account',
+    profile: 'Profile',
     settings: 'Settings',
     orderHistory: 'Order history',
     contactInfo: 'Contact information',
+    personalInfo: 'Personal Information',
+    shippingAddress: 'Shipping Address',
     preferences: 'Preferences',
     fullName: 'Full name',
     email: 'Email',
@@ -326,8 +329,12 @@ export const en = {
     saveSuccess: 'Profile updated successfully',
     memberSince: 'Member since',
     notifications: 'Notifications',
+    pushNotifications: 'Push Notifications',
+    pushNotificationsDesc: 'Receive order updates and promotions',
     newsletter: 'Newsletter',
+    newsletterDesc: 'Weekly deals and new products',
     language: 'Language',
+    appLanguage: 'App Language',
     enabled: 'Enabled',
     subscribed: 'Subscribed',
     noOrders: 'No orders yet',
@@ -341,6 +348,15 @@ export const en = {
     items: 'items',
     trackOrder: 'Track order',
     reorder: 'Reorder',
+    // Security
+    security: 'Security',
+    password: 'Password',
+    twoFactor: 'Two-Factor Auth',
+    notEnabled: 'Not enabled',
+    // Danger zone
+    dangerZone: 'Danger Zone',
+    deleteAccount: 'Delete Account',
+    deleteAccountWarning: 'Once you delete your account, there is no going back.',
   },
 
   // Languages
