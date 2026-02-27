@@ -13,6 +13,7 @@ import { AuthModal } from '../components/auth/AuthModal';
 import { CheckoutModal } from '../components/checkout/CheckoutModal';
 import { OrderTrackingModal } from '../components/tracking/OrderTrackingModal';
 import { OrderSuccessModal } from '../components/tracking/OrderSuccessModal';
+import { ProfileModal } from '../components/profile/ProfileModal';
 import { useCart } from '../contexts/CartContext';
 import { useAuth } from '../contexts/AuthContext';
 import { formatKRW } from '../utils/helpers';
@@ -351,6 +352,7 @@ export function HomePage() {
   const [showCheckoutModal, setShowCheckoutModal] = useState(false);
   const [showTrackingModal, setShowTrackingModal] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [showProfileModal, setShowProfileModal] = useState(false);
   const [lastOrder, setLastOrder] = useState(null);
   const [trackingOrderId, setTrackingOrderId] = useState(null);
   const [selectedProduct, setSelectedProduct] = useState(null);
@@ -537,7 +539,7 @@ export function HomePage() {
             <div style={{ display: 'flex', alignItems: 'center', gap: isDesktop ? 20 : 12 }}>
               {/* Account */}
               <button
-                onClick={() => setShowAuthModal(true)}
+                onClick={() => isAuthenticated ? setShowProfileModal(true) : setShowAuthModal(true)}
                 style={{
                   background: 'none',
                   border: 'none',
@@ -548,11 +550,11 @@ export function HomePage() {
                   gap: 6,
                 }}
               >
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#000" strokeWidth="1.5">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={isAuthenticated ? colors.primary : '#000'} strokeWidth="1.5">
                   <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
                   <circle cx="12" cy="7" r="4"/>
                 </svg>
-                {isDesktop && <span style={{ fontSize: 13, color: '#000' }}>{t('nav.signIn')}</span>}
+                {isDesktop && <span style={{ fontSize: 13, color: isAuthenticated ? colors.primary : '#000' }}>{isAuthenticated ? t('nav.account') : t('nav.signIn')}</span>}
               </button>
 
               {/* Cart */}
@@ -1042,7 +1044,7 @@ export function HomePage() {
             onClick={() => {
               if (tab.id === 'cart') openCart();
               else if (tab.id === 'profile') {
-                if (isAuthenticated) setShowTrackingModal(true);
+                if (isAuthenticated) setShowProfileModal(true);
                 else setShowAuthModal(true);
               }
               else setActiveTab(tab.id);
@@ -1118,6 +1120,12 @@ export function HomePage() {
         isOpen={showSuccessModal}
         onClose={() => setShowSuccessModal(false)}
         order={lastOrder}
+        onTrackOrder={handleTrackOrder}
+      />
+
+      <ProfileModal
+        isOpen={showProfileModal}
+        onClose={() => setShowProfileModal(false)}
         onTrackOrder={handleTrackOrder}
       />
 
